@@ -8,11 +8,59 @@ use axum::{
     extract::State,
     routing::post,
     Json, Router,
+    http::{HeaderMap, StatusCode},
 };
 use serde::Deserialize;
 use tokio::sync::{oneshot, Mutex};
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{filter::EnvFilter, fmt};
+
+//
+// ------------------
+// Authentication
+// ------------------
+//
+#[derive(Debug, Clone)]
+pub struct ApiKeyStore {
+    // Map of API key to allowed domain
+    keys: Arc<HashMap<String, String>>,
+}
+
+impl ApiKeyStore {
+    pub fn new() -> Self {
+        let mut keys = HashMap::new();
+        // Add your hardcoded API keys and their allowed domains here
+        keys.insert("key1".to_string(), "foo.com".to_string());
+        keys.insert("key2".to_string(), "bar.com".to_string());
+        keys.insert("key3".to_string(), "idle.com".to_string());
+        
+        Self {
+            keys: Arc::new(keys),
+        }
+    }
+
+    pub fn is_authorized(&self, api_key: &str, domain: &str) -> Result<(), StatusCode> {
+        // First check if the key exists at all
+        match self.keys.get(api_key) {
+            None => Err(StatusCode::UNAUTHORIZED),
+            Some(allowed_domain) if allowed_domain == domain => Ok(()),
+            Some(_) => Err(StatusCode::FORBIDDEN),
+        }
+    }
+
+    fn extract_api_key(headers: &HeaderMap) -> Option<String> {
+        headers
+            .get("authorization")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|auth_str| {
+                if auth_str.starts_with("Bearer ") {
+                    Some(auth_str[7..].to_string())
+                } else {
+                    None
+                }
+            })
+    }
+}
 
 //
 // ------------------
@@ -84,6 +132,12 @@ impl Sequencer {
 // Axum server
 // ------------------
 //
+#[derive(Clone)]
+struct AppState {
+    sequencer: Arc<Sequencer>,
+    api_key_store: ApiKeyStore,
+}
+
 #[derive(Deserialize)]
 struct SequenceRequest {
     domain: String,
@@ -96,27 +150,48 @@ struct DoneRequest {
 }
 
 pub fn build_app(sequencer: Arc<Sequencer>) -> Router {
+    let state = AppState {
+        sequencer,
+        api_key_store: ApiKeyStore::new(),
+    };
+
     Router::new()
         .route("/sequence", post(sequence_handler))
         .route("/done", post(done_handler))
-        .with_state(sequencer)
+        .with_state(state)
         .layer(TraceLayer::new_for_http())
 }
 
 async fn sequence_handler(
-    State(sequencer): State<Arc<Sequencer>>,
+    State(state): State<AppState>,
+    headers: HeaderMap,
     Json(payload): Json<SequenceRequest>,
-) -> &'static str {
-    sequencer.sequence(&payload.domain, &payload.request_id).await;
-    "OK"
+) -> Result<&'static str, StatusCode> {
+    // Extract and validate API key
+    let api_key = ApiKeyStore::extract_api_key(&headers)
+        .ok_or(StatusCode::UNAUTHORIZED)?;
+
+    // Check authorization
+    state.api_key_store.is_authorized(&api_key, &payload.domain)?;
+
+    state.sequencer.sequence(&payload.domain, &payload.request_id).await;
+    Ok("OK")
 }
 
 async fn done_handler(
-    State(sequencer): State<Arc<Sequencer>>,
+    State(state): State<AppState>,
+    headers: HeaderMap,
     Json(payload): Json<DoneRequest>,
-) -> &'static str {
-    sequencer.done(&payload.domain).await;
-    "OK"
+) -> Result<&'static str, StatusCode> {
+    // Extract and validate API key
+    let api_key = ApiKeyStore::extract_api_key(&headers)
+        .ok_or(StatusCode::UNAUTHORIZED)?;
+
+    // Check authorization
+    state.api_key_store.is_authorized(&api_key, &payload.domain)?;
+
+    state.sequencer.done(&payload.domain).await;
+    Ok("OK")
 }
 
 //
@@ -181,30 +256,65 @@ mod tests {
         addr: &SocketAddr,
         domain: &str,
         request_id: &str,
-    ) -> String {
-        let resp = client
+        api_key: &str,
+    ) -> reqwest::Response {
+        client
             .post(format!("http://{}/sequence", addr))
+            .header("Authorization", format!("Bearer {}", api_key))
             .json(&serde_json::json!({ "domain": domain, "request_id": request_id }))
             .send()
             .await
-            .expect("sequence call failed");
-        resp.text().await.expect("failed to read sequence body")
+            .expect("sequence call failed")
     }
 
-    async fn call_done(client: &Client, addr: &SocketAddr, domain: &str) {
-        let resp = client
+    async fn call_done(client: &Client, addr: &SocketAddr, domain: &str, api_key: &str) -> reqwest::Response {
+        client
             .post(format!("http://{}/done", addr))
+            .header("Authorization", format!("Bearer {}", api_key))
             .json(&serde_json::json!({ "domain": domain }))
             .send()
             .await
-            .expect("done call failed");
-        assert!(resp.status().is_success());
+            .expect("done call failed")
     }
 
-    // -------------------------------------------------------
-    // 1. test_explicit_enqueuing_flow
-    // Demonstrates a specific manual order of unblocking: req-1-> req-2-> req-3
-    // -------------------------------------------------------
+    // New test for authentication
+    #[tokio::test]
+    async fn test_authentication() {
+        let (handle, addr) = spawn_server().await;
+        let client = Client::new();
+
+        // Test 1: Valid API key for correct domain
+        let resp = call_sequence(&client, &addr, "foo.com", "req-1", "key1").await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        call_done(&client, &addr, "foo.com", "key1").await;
+
+        // Test 2: Valid API key for wrong domain
+        let resp = call_sequence(&client, &addr, "bar.com", "req-2", "key1").await;
+        assert_eq!(resp.status(), StatusCode::FORBIDDEN);
+
+        // Test 3: Invalid API key (should be 401 Unauthorized)
+        let resp = client
+            .post(format!("http://{}/sequence", addr))
+            .header("Authorization", "Bearer invalid-key")
+            .json(&serde_json::json!({ "domain": "foo.com", "request_id": "req-3" }))
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(resp.status(), StatusCode::UNAUTHORIZED);
+
+        // Test 4: Missing Authorization header (should be 401 Unauthorized)
+        let resp = client
+            .post(format!("http://{}/sequence", addr))
+            .json(&serde_json::json!({ "domain": "foo.com", "request_id": "req-4" }))
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(resp.status(), StatusCode::UNAUTHORIZED);
+
+        handle.shutdown();
+    }
+
+    // Update other test functions to use API keys
     #[tokio::test]
     async fn test_explicit_enqueuing_flow() {
         tracing_subscriber::fmt()
@@ -223,10 +333,10 @@ mod tests {
             let addr = addr.clone();
             let results = results.clone();
             tokio::spawn(async move {
-                let body = call_sequence(&client, &addr, "foo", request_id).await;
+                let resp = call_sequence(&client, &addr, "foo.com", request_id, "key1").await;
                 let mut lock = results.lock().await;
                 lock.push(format!("done-{}", request_id));
-                body
+                resp.text().await.unwrap()
             })
         };
 
@@ -241,24 +351,24 @@ mod tests {
         let r3 = spawn_req("req-3");
 
         // Unblock req-0 => that unblocks req-1
-        call_done(&client, &addr, "foo").await;
+        call_done(&client, &addr, "foo.com", "key1").await;
         let out_r1 = r1;
         let out_r0 = r0.await.unwrap(); // "req-0" done
         assert_eq!(out_r0, "OK");
 
         // Now we call done again => unblocks req-2
-        call_done(&client, &addr, "foo").await;
+        call_done(&client, &addr, "foo.com", "key1").await;
         let out_r1 = out_r1.await.unwrap();
         assert_eq!(out_r1, "OK");
 
         // Next done => unblocks req-3
-        call_done(&client, &addr, "foo").await;
+        call_done(&client, &addr, "foo.com", "key1").await;
         let out_r2 = r2.await.unwrap();
         assert_eq!(out_r2, "OK");
 
         // Finally, one more done => though it's possible no one is left waiting,
         // let's do it anyway to fully ensure req-3 is done:
-        call_done(&client, &addr, "foo").await;
+        call_done(&client, &addr, "foo.com", "key1").await;
         let out_r3 = r3.await.unwrap();
         assert_eq!(out_r3, "OK");
 
@@ -286,8 +396,8 @@ mod tests {
         let foo_req = {
             let client = client.clone();
             tokio::spawn(async move {
-                let resp = call_sequence(&client, &addr, "foo", "foo-req").await;
-                resp
+                let resp = call_sequence(&client, &addr, "foo.com", "foo-req", "key1").await;
+                resp.text().await.unwrap()
             })
         };
 
@@ -295,8 +405,8 @@ mod tests {
         let bar_req = {
             let client = client.clone();
             tokio::spawn(async move {
-                let resp = call_sequence(&client, &addr, "bar", "bar-req").await;
-                resp
+                let resp = call_sequence(&client, &addr, "bar.com", "bar-req", "key2").await;
+                resp.text().await.unwrap()
             })
         };
 
@@ -304,9 +414,9 @@ mod tests {
         tokio::time::sleep(Duration::from_millis(200)).await;
 
         // "Done" for foo
-        call_done(&client, &addr, "foo").await;
+        call_done(&client, &addr, "foo.com", "key1").await;
         // "Done" for bar
-        call_done(&client, &addr, "bar").await;
+        call_done(&client, &addr, "bar.com", "key2").await;
 
         let foo_body = foo_req.await.unwrap();
         let bar_body = bar_req.await.unwrap();
@@ -330,14 +440,14 @@ mod tests {
         let client = Client::new();
 
         // 1) Immediately call /done on domain=idle.com, which has no active or waiting requests
-        call_done(&client, &addr, "idle.com").await;
+        call_done(&client, &addr, "idle.com", "key3").await;
 
         // 2) Send a request to "idle.com" => should become active right away
-        let out = call_sequence(&client, &addr, "idle.com", "req-1").await;
-        assert_eq!(out, "OK");
+        let resp = call_sequence(&client, &addr, "idle.com", "req-1", "key3").await;
+        assert_eq!(resp.text().await.unwrap(), "OK");
 
         // 3) Now done -> should go idle again
-        call_done(&client, &addr, "idle.com").await;
+        call_done(&client, &addr, "idle.com", "key3").await;
 
         handle.shutdown();
     }
@@ -355,11 +465,11 @@ mod tests {
         let client = Client::new();
 
         // Start the first request => becomes active
-        let r1 = tokio::spawn({
+        let _r1 = tokio::spawn({
             let client = client.clone();
             async move {
-                let resp = call_sequence(&client, &addr, "foo", "req-1").await;
-                resp
+                let resp = call_sequence(&client, &addr, "foo.com", "req-1", "key1").await;
+                resp.text().await.unwrap()
             }
         });
 
@@ -374,11 +484,11 @@ mod tests {
                 // We'll artificially time out the request using a tokio::time::timeout
                 match tokio::time::timeout(
                     Duration::from_secs(1),
-                    call_sequence(&client, &addr, "foo", "req-2"),
+                    call_sequence(&client, &addr, "foo.com", "req-2", "key1"),
                 )
                 .await
                 {
-                    Ok(resp) => resp, // if it completes, return
+                    Ok(resp) => resp.text().await.unwrap(), // if it completes, return
                     Err(_) => "TIMED OUT".into(),
                 }
             }
@@ -389,15 +499,6 @@ mod tests {
         let resp2 = r2.await.unwrap();
         assert_eq!(resp2, "TIMED OUT");
 
-        // If we want to confirm r1 is indeed still active, we can do so.
-        // Right now, r1 won't complete unless we call done:
-        // call_done(&client, &addr, "foo").await;
-
-        // Then r1 eventually returns "OK"
-        // But for this test, we prove that not calling /done => second request is stuck.
-
-        // Optionally clean up:
-        let _ = r1; // we never used its result
         handle.shutdown();
     }
 
@@ -415,7 +516,8 @@ mod tests {
         let r1 = tokio::spawn({
             let client = client.clone();
             async move {
-                call_sequence(&client, &addr, "foo", "req-1").await
+                let resp = call_sequence(&client, &addr, "foo.com", "req-1", "key1").await;
+                resp.text().await.unwrap()
             }
         });
 
@@ -423,23 +525,23 @@ mod tests {
         tokio::time::sleep(Duration::from_millis(100)).await;
 
         // Now call /done => unblocks r1
-        call_done(&client, &addr, "foo").await;
+        call_done(&client, &addr, "foo.com", "key1").await;
 
         // Wait for r1
         let out_r1 = r1.await.unwrap();
         assert_eq!(out_r1, "OK");
 
         // domain=foo is now idle, so the next /done calls do nothing
-        call_done(&client, &addr, "foo").await;
-        call_done(&client, &addr, "foo").await;
-        call_done(&client, &addr, "foo").await;
+        call_done(&client, &addr, "foo.com", "key1").await;
+        call_done(&client, &addr, "foo.com", "key1").await;
+        call_done(&client, &addr, "foo.com", "key1").await;
 
         // We can check a fresh request to "foo" still works
-        let out2 = call_sequence(&client, &addr, "foo", "req-2").await;
-        assert_eq!(out2, "OK");
+        let out2 = call_sequence(&client, &addr, "foo.com", "req-2", "key1").await;
+        assert_eq!(out2.text().await.unwrap(), "OK");
 
         // done again
-        call_done(&client, &addr, "foo").await;
+        call_done(&client, &addr, "foo.com", "key1").await;
 
         handle.shutdown();
     }
