@@ -205,7 +205,7 @@ async fn main() {
     let sequencer = Arc::new(Sequencer::new());
     let app = build_app(sequencer);
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 5000));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 4001));
     println!("Listening on http://{}", addr);
 
     axum_server::bind(addr)
