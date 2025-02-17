@@ -76,7 +76,7 @@ sequencer/
    ```bash
    cargo run
    ```
-   This will start the server listening on `127.0.0.1:3000`.
+   This will start the server listening on `127.0.0.1:5000`.
 
 ## Usage
 
@@ -89,7 +89,7 @@ curl -X POST \
      -H "Authorization: Bearer key1" \
      -H "Content-Type: application/json" \
      -d '{"domain":"foo.com","request_id":"req-1"}' \
-     http://127.0.0.1:3000/sequence
+     http://127.0.0.1:5000/sequence
 ```
 - If foo.com is idle and the key is valid, you get "OK" immediately
 - If there's already an active request, this call will block until it's your turn
@@ -102,7 +102,7 @@ curl -X POST \
      -H "Authorization: Bearer key1" \
      -H "Content-Type: application/json" \
      -d '{"domain":"foo.com"}' \
-     http://127.0.0.1:3000/done
+     http://127.0.0.1:5000/done
 ```
 - If there is a queued request for foo.com, the next one is made active
 - If no one is waiting, foo.com goes idle again
