@@ -208,10 +208,49 @@ async fn main() {
     let addr = SocketAddr::from(([0, 0, 0, 0], 4001));
     println!("Listening on http://{}", addr);
 
+    // Create a shutdown signal handler
+    let handle = axum_server::Handle::new();
+    let handle_clone = handle.clone();
+
+    // Spawn signal handler task
+    tokio::spawn(async move {
+        let ctrl_c = async {
+            tokio::signal::ctrl_c()
+                .await
+                .expect("failed to install Ctrl+C handler");
+        };
+
+        #[cfg(unix)]
+        let terminate = async {
+            tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
+                .expect("failed to install signal handler")
+                .recv()
+                .await;
+        };
+
+        #[cfg(not(unix))]
+        let terminate = std::future::pending::<()>();
+
+        tokio::select! {
+            _ = ctrl_c => {
+                println!("Received Ctrl+C, starting graceful shutdown");
+            },
+            _ = terminate => {
+                println!("Received SIGTERM, starting graceful shutdown");
+            },
+        }
+
+        handle_clone.shutdown();
+    });
+
+    // Start the server with the handle
     axum_server::bind(addr)
+        .handle(handle)
         .serve(app.into_make_service())
         .await
         .unwrap();
+
+    println!("Server shutdown complete");
 }
 
 //
