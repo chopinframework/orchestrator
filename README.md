@@ -7,20 +7,16 @@ This repository provides a per-domain sequential request handler built on Axum. 
 - Rust + Tokio for async runtime
 - Axum + tower-http for the HTTP server and middleware (like TraceLayer)
 - A custom Sequencer structure enforcing per-domain queuing
-- API key-based authentication with domain restrictions
+- Simple API key authentication
 
 ## How It Works
 
 ### 1. Authentication
 - Each request must include an `Authorization: Bearer <key>` header
-- API keys are mapped to specific domains (e.g., key1 -> foo.com)
-- A request is only allowed if:
-  1. The API key exists and is valid
-  2. The key is authorized for the requested domain
+- A fixed set of API keys is maintained in memory
 - Authentication responses:
   - `401 Unauthorized`: Missing or invalid API key
-  - `403 Forbidden`: Valid key but not authorized for the domain
-  - `200 OK`: Valid key and authorized for the domain
+  - `200 OK`: Valid API key
 
 ### 2. Sequencer
 - Maintains an in-memory queue for each domain (e.g., foo.com, bar.com)
@@ -84,7 +80,7 @@ sequencer/
 
 ## Usage
 
-Once the server is running, you can test your per-domain queueing. All requests require an API key that is authorized for the domain being accessed.
+Once the server is running, you can test your per-domain queueing. All requests require a valid API key.
 
 ### 1. Enqueue a request
 With domain foo.com and request_id req-1:
@@ -95,9 +91,9 @@ curl -X POST \
      -d '{"domain":"foo.com","request_id":"req-1"}' \
      http://127.0.0.1:3000/sequence
 ```
-- If foo.com is idle and the key is authorized, you get "OK" immediately
+- If foo.com is idle and the key is valid, you get "OK" immediately
 - If there's already an active request, this call will block until it's your turn
-- If the key is invalid or unauthorized, you'll get a 401 or 403 response
+- If the key is invalid or missing, you'll get a 401 response
 
 ### 2. Unblock the next request
 For foo.com:
@@ -115,10 +111,7 @@ curl -X POST \
 ### 3. Test concurrency with multiple domains
 - Requests for foo.com do not block requests for bar.com
 - Requests for the same domain queue up sequentially
-- Each domain requires its own API key:
-  - key1 -> foo.com
-  - key2 -> bar.com
-  - key3 -> idle.com
+- Any valid API key can be used with any domain
 
 ## API Endpoints
 
@@ -130,7 +123,6 @@ curl -X POST \
 - Responses:
   - `200 OK`: Request is now active
   - `401 Unauthorized`: Missing or invalid API key
-  - `403 Forbidden`: Valid key but not authorized for domain
 
 ### POST /done
 - Headers:
@@ -140,14 +132,13 @@ curl -X POST \
 - Responses:
   - `200 OK`: Current request marked as done
   - `401 Unauthorized`: Missing or invalid API key
-  - `403 Forbidden`: Valid key but not authorized for domain
 
 ## Running Tests
 
 The repository includes integration tests in `main.rs` (within `#[cfg(test)] mod tests`). These tests:
 - Spawn the Axum server in-process on an ephemeral port
 - Use reqwest to send real HTTP calls to `/sequence` and `/done`
-- Check authentication (API keys, domain authorization)
+- Check authentication (API key validation)
 - Check concurrency and queueing (same-domain blocking, different-domain concurrency, edge cases, etc.)
 
 To run all tests:
@@ -156,7 +147,7 @@ cargo test
 ```
 
 ### Test Scenarios
-- `test_authentication`: Verifies API key validation and domain authorization
+- `test_authentication`: Verifies API key validation
 - `test_explicit_enqueuing_flow`: Checks a specific manual order of unblocking
 - `test_concurrent_different_domains`: Verifies domains do not block each other
 - `test_already_idle_domain`: Calls /done on an idle domain

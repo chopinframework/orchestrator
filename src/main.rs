@@ -1,5 +1,5 @@
 use std::{
-    collections::{HashMap, VecDeque},
+    collections::{HashMap, VecDeque, HashSet},
     net::SocketAddr,
     sync::Arc,
 };
@@ -22,30 +22,25 @@ use tracing_subscriber::{filter::EnvFilter, fmt};
 //
 #[derive(Debug, Clone)]
 pub struct ApiKeyStore {
-    // Map of API key to allowed domain
-    keys: Arc<HashMap<String, String>>,
+    // Set of valid API keys
+    keys: Arc<HashSet<String>>,
 }
 
 impl ApiKeyStore {
     pub fn new() -> Self {
-        let mut keys = HashMap::new();
-        // Add your hardcoded API keys and their allowed domains here
-        keys.insert("key1".to_string(), "foo.com".to_string());
-        keys.insert("key2".to_string(), "bar.com".to_string());
-        keys.insert("key3".to_string(), "idle.com".to_string());
+        let mut keys = HashSet::new();
+        // Add your hardcoded API keys here
+        keys.insert("key1".to_string());
+        keys.insert("key2".to_string());
+        keys.insert("key3".to_string());
         
         Self {
             keys: Arc::new(keys),
         }
     }
 
-    pub fn is_authorized(&self, api_key: &str, domain: &str) -> Result<(), StatusCode> {
-        // First check if the key exists at all
-        match self.keys.get(api_key) {
-            None => Err(StatusCode::UNAUTHORIZED),
-            Some(allowed_domain) if allowed_domain == domain => Ok(()),
-            Some(_) => Err(StatusCode::FORBIDDEN),
-        }
+    pub fn is_valid(&self, api_key: &str) -> bool {
+        self.keys.contains(api_key)
     }
 
     fn extract_api_key(headers: &HeaderMap) -> Option<String> {
@@ -171,8 +166,9 @@ async fn sequence_handler(
     let api_key = ApiKeyStore::extract_api_key(&headers)
         .ok_or(StatusCode::UNAUTHORIZED)?;
 
-    // Check authorization
-    state.api_key_store.is_authorized(&api_key, &payload.domain)?;
+    if !state.api_key_store.is_valid(&api_key) {
+        return Err(StatusCode::UNAUTHORIZED);
+    }
 
     state.sequencer.sequence(&payload.domain, &payload.request_id).await;
     Ok("OK")
@@ -187,8 +183,9 @@ async fn done_handler(
     let api_key = ApiKeyStore::extract_api_key(&headers)
         .ok_or(StatusCode::UNAUTHORIZED)?;
 
-    // Check authorization
-    state.api_key_store.is_authorized(&api_key, &payload.domain)?;
+    if !state.api_key_store.is_valid(&api_key) {
+        return Err(StatusCode::UNAUTHORIZED);
+    }
 
     state.sequencer.done(&payload.domain).await;
     Ok("OK")
@@ -283,16 +280,12 @@ mod tests {
         let (handle, addr) = spawn_server().await;
         let client = Client::new();
 
-        // Test 1: Valid API key for correct domain
+        // Test 1: Valid API key
         let resp = call_sequence(&client, &addr, "foo.com", "req-1", "key1").await;
         assert_eq!(resp.status(), StatusCode::OK);
         call_done(&client, &addr, "foo.com", "key1").await;
 
-        // Test 2: Valid API key for wrong domain
-        let resp = call_sequence(&client, &addr, "bar.com", "req-2", "key1").await;
-        assert_eq!(resp.status(), StatusCode::FORBIDDEN);
-
-        // Test 3: Invalid API key (should be 401 Unauthorized)
+        // Test 2: Invalid API key
         let resp = client
             .post(format!("http://{}/sequence", addr))
             .header("Authorization", "Bearer invalid-key")
@@ -302,7 +295,7 @@ mod tests {
             .unwrap();
         assert_eq!(resp.status(), StatusCode::UNAUTHORIZED);
 
-        // Test 4: Missing Authorization header (should be 401 Unauthorized)
+        // Test 3: Missing Authorization header
         let resp = client
             .post(format!("http://{}/sequence", addr))
             .json(&serde_json::json!({ "domain": "foo.com", "request_id": "req-4" }))
