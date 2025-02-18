@@ -153,6 +153,7 @@ pub fn build_app(sequencer: Arc<Sequencer>) -> Router {
     Router::new()
         .route("/sequence", post(sequence_handler))
         .route("/done", post(done_handler))
+        .route("/health", axum::routing::get(health_handler))
         .with_state(state)
         .layer(TraceLayer::new_for_http())
 }
@@ -189,6 +190,10 @@ async fn done_handler(
 
     state.sequencer.done(&payload.domain).await;
     Ok("OK")
+}
+
+async fn health_handler() -> StatusCode {
+    StatusCode::OK
 }
 
 //
@@ -575,6 +580,25 @@ mod tests {
         // done again
         call_done(&client, &addr, "foo.com", "key1").await;
 
+        handle.shutdown();
+    }
+
+    // -------------------------------------------------------
+    // 6. test_health_check
+    // Verifies that the health check endpoint returns 200 OK
+    // -------------------------------------------------------
+    #[tokio::test]
+    async fn test_health_check() {
+        let (handle, addr) = spawn_server().await;
+        let client = Client::new();
+
+        let resp = client
+            .get(format!("http://{}/health", addr))
+            .send()
+            .await
+            .unwrap();
+        
+        assert_eq!(resp.status(), StatusCode::OK);
         handle.shutdown();
     }
 }

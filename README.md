@@ -8,6 +8,8 @@ This repository provides a per-domain sequential request handler built on Axum. 
 - Axum + tower-http for the HTTP server and middleware (like TraceLayer)
 - A custom Sequencer structure enforcing per-domain queuing
 - Simple API key authentication
+- Docker containerization
+- SST for AWS Fargate deployment
 
 ## How It Works
 
@@ -26,6 +28,7 @@ This repository provides a per-domain sequential request handler built on Axum. 
 ### 3. Axum HTTP Routes
 - `/sequence`: Enqueues the incoming request (domain+request_id) on its domain queue. The HTTP response is returned only when the request is at the front of that domain's queue
 - `/done`: Notifies the Sequencer that the active request for a given domain is finished, allowing the next queued request to become active
+- `/health`: A health check endpoint that returns 200 OK when the service is running properly
 
 ### 4. Parallel Domains, Sequential Per Domain
 - If two requests arrive for the same domain, the second request is blocked until the first completes
@@ -35,13 +38,15 @@ This repository provides a per-domain sequential request handler built on Axum. 
 
 ```
 sequencer/
+├── Dockerfile          # Docker container configuration
+├── sst.config.ts      # SST deployment configuration
 ├── Cargo.toml
 └── src
-    └── main.rs    # Contains:
-                   # - ApiKeyStore for authentication
-                   # - Sequencer struct & logic
-                   # - Axum server code (routes)
-                   # - End-to-end integration tests
+    └── main.rs        # Contains:
+                       # - ApiKeyStore for authentication
+                       # - Sequencer struct & logic
+                       # - Axum server code (routes)
+                       # - End-to-end integration tests
 ```
 
 ### Key files:
@@ -53,6 +58,8 @@ sequencer/
   - A test module with end-to-end tests using reqwest
 - `Cargo.toml`:
   - Lists the project name, version, and dependencies (including axum, tower-http, reqwest, etc.)
+- `Dockerfile`: Multi-stage build for creating a minimal production container
+- `sst.config.ts`: AWS Fargate deployment configuration using SST
 
 ## Getting Started
 
@@ -77,6 +84,55 @@ sequencer/
    cargo run
    ```
    This will start the server listening on `127.0.0.1:4001`.
+
+### Docker Build
+
+Build the Docker image:
+```bash
+docker build -t sequencer .
+```
+
+Run the container locally:
+```bash
+docker run -p 4001:4001 sequencer
+```
+
+### AWS Deployment (Experimental)
+
+The service can be deployed to AWS Fargate using SST. First, ensure you have AWS credentials configured:
+
+```bash
+aws configure
+```
+
+Then deploy with:
+
+```bash
+npx sst deploy
+```
+
+This will:
+1. Create a VPC and ECS cluster in your AWS account
+2. Build and push the Docker image to Amazon ECR
+3. Deploy the service to ECS Fargate with:
+   - Exactly one container instance (no auto-scaling)
+   - Load balancer for HTTP traffic
+   - Health checks every 10 seconds
+   - Resource allocation:
+     - CPU: 0.25 vCPU
+     - Memory: 0.5 GB
+     - Storage: 20 GB
+
+The deployment uses AWS best practices:
+- Runs in a private subnet with a load balancer in the public subnet
+- Automatic container health monitoring and replacement
+- CloudWatch logs integration
+- IAM roles with least privilege
+
+After deployment, you can find your service URL in:
+1. The SST Console
+2. The deployment output
+3. The AWS ECS Console
 
 ## Usage
 
@@ -133,13 +189,19 @@ curl -X POST \
   - `200 OK`: Current request marked as done
   - `401 Unauthorized`: Missing or invalid API key
 
+### GET /health
+- No authentication required
+- Returns:
+  - `200 OK`: Service is healthy and ready to accept requests
+
 ## Running Tests
 
 The repository includes integration tests in `main.rs` (within `#[cfg(test)] mod tests`). These tests:
 - Spawn the Axum server in-process on an ephemeral port
-- Use reqwest to send real HTTP calls to `/sequence` and `/done`
+- Use reqwest to send real HTTP calls to `/sequence`, `/done`, and `/health`
 - Check authentication (API key validation)
-- Check concurrency and queueing (same-domain blocking, different-domain concurrency, edge cases, etc.)
+- Check concurrency and queueing
+- Verify health check functionality
 
 To run all tests:
 ```bash
@@ -153,14 +215,16 @@ cargo test
 - `test_already_idle_domain`: Calls /done on an idle domain
 - `test_never_calls_done`: Confirms a second request remains blocked forever if the first never calls /done
 - `test_done_multiple_times`: Ensures extra /done calls on an idle domain don't break anything
+- `test_health_check`: Verifies the health check endpoint returns 200 OK
 
 Example output:
 ```
-running 6 tests
+running 7 tests
 test tests::test_authentication ... ok
 test tests::test_explicit_enqueuing_flow ... ok
 test tests::test_concurrent_different_domains ... ok
 test tests::test_already_idle_domain ... ok
 test tests::test_never_calls_done ... ok
 test tests::test_done_multiple_times ... ok
+test tests::test_health_check ... ok
 ```
