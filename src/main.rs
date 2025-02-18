@@ -210,7 +210,12 @@ async fn main() {
     let sequencer = Arc::new(Sequencer::new());
     let app = build_app(sequencer);
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 4001));
+    // Get port from environment variable or use default
+    let port = std::env::var("PORT")
+        .ok()
+        .and_then(|p| p.parse().ok())
+        .unwrap_or(4001);
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     println!("Listening on http://{}", addr);
 
     // Create a shutdown signal handler
