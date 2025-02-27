@@ -1,0 +1,36 @@
+speakeasyVersion: 1.506.0
+sources:
+    Sequencer API:
+        sourceNamespace: sequencer-api
+        sourceRevisionDigest: sha256:bb13ad820c8571c93d2c16fb53a412da8f8b0b57208970e86c33269cf66ed555
+        sourceBlobDigest: sha256:9aa5ebdbff62b5fd559562f8edb5ca4601a8305441424dbd579cd19d4d673b1e
+        tags:
+            - latest
+            - 0.1.0
+targets:
+    chopin:
+        source: Sequencer API
+        sourceNamespace: sequencer-api
+        sourceRevisionDigest: sha256:bb13ad820c8571c93d2c16fb53a412da8f8b0b57208970e86c33269cf66ed555
+        sourceBlobDigest: sha256:9aa5ebdbff62b5fd559562f8edb5ca4601a8305441424dbd579cd19d4d673b1e
+        codeSamplesNamespace: sequencer-api-typescript-code-samples
+        codeSamplesRevisionDigest: sha256:9f121520be037482f8fefa75161630cc744b512c156985c9179860ae532599a2
+workflow:
+    workflowVersion: 1.0.0
+    speakeasyVersion: latest
+    sources:
+        Sequencer API:
+            inputs:
+                - location: ../openapi/openapi.json
+            registry:
+                location: registry.speakeasyapi.dev/chopin-framework/workspace/sequencer-api
+    targets:
+        chopin:
+            target: typescript
+            source: Sequencer API
+            codeSamples:
+                registry:
+                    location: registry.speakeasyapi.dev/chopin-framework/workspace/sequencer-api-typescript-code-samples
+                labelOverride:
+                    fixedValue: Typescript (SDK)
+                blocking: false

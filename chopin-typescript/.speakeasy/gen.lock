@@ -5,8 +5,8 @@ management:
   docVersion: 0.1.0
   speakeasyVersion: 1.506.0
   generationVersion: 2.533.0
-  releaseVersion: 0.0.1
-  configChecksum: d3d1049477522dab0fd829ca1b601551
+  releaseVersion: 0.0.2
+  configChecksum: f4d6e3c6ecc85dc194771c4342985b17
 features:
   typescript:
     additionalDependencies: 0.1.0
@@ -37,7 +37,6 @@ generatedFiles:
   - docs/models/errors/errorresponse.md
   - docs/sdks/chopin/README.md
   - docs/sdks/sequencer/README.md
-  - eslint.config.mjs
   - jsr.json
   - package.json
   - src/core.ts

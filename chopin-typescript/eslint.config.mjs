@@ -10,6 +10,13 @@ export default [
   ...tseslint.configs.recommended,
   {
     rules: {
+      /**
+       * Monkey Patch
+       */
+      "no-useless-escape": "off",
+      /**
+       * End of Monkey Patch
+       */
       "no-constant-condition": "off",
       // Handled by typescript compiler
       "@typescript-eslint/no-unused-vars": "off",
