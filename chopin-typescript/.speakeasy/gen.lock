@@ -1,0 +1,137 @@
+lockVersion: 2.0.0
+id: 7ec8f99c-f28d-478d-b407-d8a43f54c8e0
+management:
+  docChecksum: 1d91b4defa51d47ac77839fb20745aad
+  docVersion: 0.1.0
+  speakeasyVersion: 1.506.0
+  generationVersion: 2.533.0
+  releaseVersion: 0.0.1
+  configChecksum: d3d1049477522dab0fd829ca1b601551
+features:
+  typescript:
+    additionalDependencies: 0.1.0
+    core: 3.21.3
+    defaultEnabledRetries: 0.1.0
+    devContainers: 2.90.0
+    envVarSecurityUsage: 0.1.2
+    globalSecurity: 2.82.13
+    globalSecurityCallbacks: 0.1.0
+    globalSecurityFlattening: 0.1.0
+    mcpServer: 0.3.0
+    responseFormat: 0.2.3
+    retries: 2.83.0
+    sdkHooks: 0.2.0
+generatedFiles:
+  - .devcontainer/README.md
+  - .devcontainer/devcontainer.json
+  - .devcontainer/setup.sh
+  - .gitattributes
+  - .npmignore
+  - FUNCTIONS.md
+  - RUNTIMES.md
+  - USAGE.md
+  - docs/lib/utils/retryconfig.md
+  - docs/models/components/donerequest.md
+  - docs/models/components/security.md
+  - docs/models/components/sequencerequest.md
+  - docs/models/errors/errorresponse.md
+  - docs/sdks/chopin/README.md
+  - docs/sdks/sequencer/README.md
+  - eslint.config.mjs
+  - jsr.json
+  - package.json
+  - src/core.ts
+  - src/funcs/sequencerDone.ts
+  - src/funcs/sequencerHealth.ts
+  - src/funcs/sequencerOpenapiJson.ts
+  - src/funcs/sequencerSequence.ts
+  - src/hooks/hooks.ts
+  - src/hooks/index.ts
+  - src/hooks/types.ts
+  - src/index.ts
+  - src/lib/base64.ts
+  - src/lib/config.ts
+  - src/lib/dlv.ts
+  - src/lib/encodings.ts
+  - src/lib/env.ts
+  - src/lib/files.ts
+  - src/lib/http.ts
+  - src/lib/is-plain-object.ts
+  - src/lib/logger.ts
+  - src/lib/matchers.ts
+  - src/lib/primitives.ts
+  - src/lib/retries.ts
+  - src/lib/schemas.ts
+  - src/lib/sdks.ts
+  - src/lib/security.ts
+  - src/lib/url.ts
+  - src/mcp-server/build.mts
+  - src/mcp-server/cli.ts
+  - src/mcp-server/cli/start/command.ts
+  - src/mcp-server/cli/start/impl.ts
+  - src/mcp-server/console-logger.ts
+  - src/mcp-server/mcp-server.ts
+  - src/mcp-server/resources.ts
+  - src/mcp-server/scopes.ts
+  - src/mcp-server/server.ts
+  - src/mcp-server/shared.ts
+  - src/mcp-server/tools.ts
+  - src/mcp-server/tools/sequencerDone.ts
+  - src/mcp-server/tools/sequencerHealth.ts
+  - src/mcp-server/tools/sequencerOpenapiJson.ts
+  - src/mcp-server/tools/sequencerSequence.ts
+  - src/models/components/donerequest.ts
+  - src/models/components/index.ts
+  - src/models/components/security.ts
+  - src/models/components/sequencerequest.ts
+  - src/models/errors/apierror.ts
+  - src/models/errors/errorresponse.ts
+  - src/models/errors/httpclienterrors.ts
+  - src/models/errors/index.ts
+  - src/models/errors/sdkvalidationerror.ts
+  - src/sdk/index.ts
+  - src/sdk/sdk.ts
+  - src/sdk/sequencer.ts
+  - src/types/async.ts
+  - src/types/blobs.ts
+  - src/types/constdatetime.ts
+  - src/types/enums.ts
+  - src/types/fp.ts
+  - src/types/index.ts
+  - src/types/operations.ts
+  - src/types/rfcdate.ts
+  - src/types/streams.ts
+  - tsconfig.json
+examples:
+  sequence:
+    speakeasy-default-sequence:
+      requestBody:
+        application/json: {"domain": "accurate-eternity.info", "request_id": "<id>"}
+      responses:
+        "200":
+          text/plain: "<value>"
+        "401":
+          application/json: {"message": "<value>"}
+  done:
+    speakeasy-default-done:
+      requestBody:
+        application/json: {"domain": "jittery-blossom.name"}
+      responses:
+        "200":
+          text/plain: "<value>"
+        "401":
+          application/json: {"message": "<value>"}
+  health:
+    speakeasy-default-health:
+      responses:
+        "200":
+          text/plain: "<value>"
+  openapi_json:
+    speakeasy-default-openapi-json:
+      responses:
+        "200":
+          text/plain: "<value>"
+        "401":
+          application/json: {"message": "<value>"}
+examplesVersion: 1.0.0
+generatedTests: {}
