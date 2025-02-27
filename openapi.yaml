@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: Sequencer API
+  description: |
+    API for sequencing requests by domain to ensure only one request per domain is active at a time.
+    This service helps manage concurrent access to domain-specific resources.
+  version: 1.0.0
+  
+servers:
+  - url: http://localhost:4001
+    description: Default local server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: API key must be provided as a Bearer token in the Authorization header
+  
+  schemas:
+    SequenceRequest:
+      type: object
+      required:
+        - domain
+        - request_id
+      properties:
+        domain:
+          type: string
+          description: The domain to sequence requests for
+          example: "example.com"
+        request_id:
+          type: string
+          description: Unique identifier for this request
+          example: "req-123"
+    
+    DoneRequest:
+      type: object
+      required:
+        - domain
+      properties:
+        domain:
+          type: string
+          description: The domain to mark as done
+          example: "example.com"
+    
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+
+paths:
+  /sequence:
+    post:
+      summary: Sequence a request for a specific domain
+      description: |
+        Blocks until it's this request's turn to access the specified domain.
+        If the domain is already active with another request, this request will be queued.
+      operationId: sequenceRequest
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SequenceRequest'
+      responses:
+        '200':
+          description: Request is now active for the domain
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "OK"
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /done:
+    post:
+      summary: Mark a domain request as complete
+      description: |
+        Signals that the active request for a domain is complete.
+        If there are other requests waiting for this domain, the next one will be unblocked.
+      operationId: markDone
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoneRequest'
+      responses:
+        '200':
+          description: Domain marked as done successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "OK"
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Simple health check to verify the service is running
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy 
