@@ -13,3 +13,6 @@ tower-http = { version = "0.5", features = ["trace"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 reqwest = { version = "0.12", features = ["json"] }
+# OpenAPI specification generator
+utoipa = { version = "4.2", features = ["axum_extras"] }
+utoipa-swagger-ui = { version = "6.0", features = ["axum"] }

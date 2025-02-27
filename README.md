@@ -10,6 +10,7 @@ This repository provides a per-domain sequential request handler built on Axum. 
 - Simple API key authentication
 - Docker containerization
 - SST for AWS Fargate deployment
+- OpenAPI documentation with Swagger UI
 
 ## How It Works
 
@@ -228,3 +229,24 @@ test tests::test_never_calls_done ... ok
 test tests::test_done_multiple_times ... ok
 test tests::test_health_check ... ok
 ```
+
+## API Documentation
+
+The API is documented using OpenAPI 3.0.3 and available through Swagger UI when the server is running.
+
+### Viewing API Documentation
+
+1. Start the server: `cargo run`
+2. Open `http://localhost:4001/swagger-ui/` in your browser
+3. Access raw OpenAPI spec at `http://localhost:4001/openapi.json`
+
+### Updating API Documentation
+
+The OpenAPI specification is automatically generated from the code:
+
+1. Run the update script: `./scripts/update_api_docs.sh`
+2. This updates both:
+   - `openapi/openapi.json` (OpenAPI specification)
+   - The embedded spec in `src/main.rs`
+
+For more details, see [README_OPENAPI.md](README_OPENAPI.md).
