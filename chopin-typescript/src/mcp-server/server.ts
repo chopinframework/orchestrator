@@ -6,35 +6,64 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ChopinCore } from "../core.js";
 import { SDKOptions } from "../lib/config.js";
 import type { ConsoleLogger } from "./console-logger.js";
+import {
+  createRegisterResource,
+  createRegisterResourceTemplate,
+} from "./resources.js";
 import { MCPScope, mcpScopes } from "./scopes.js";
 import { createRegisterTool } from "./tools.js";
-import { tool$sequencerDone } from "./tools/sequencerDone.js";
-import { tool$sequencerHealth } from "./tools/sequencerHealth.js";
-import { tool$sequencerOpenapiJson } from "./tools/sequencerOpenapiJson.js";
-import { tool$sequencerSequence } from "./tools/sequencerSequence.js";
+import { tool$oraclePostApiContextJson } from "./tools/oraclePostApiContextJson.js";
+import { tool$oraclePostApiContextMultipart } from "./tools/oraclePostApiContextMultipart.js";
+import { tool$oraclePostApiContextRaw } from "./tools/oraclePostApiContextRaw.js";
+import { tool$sequencerPostApiRequestJson } from "./tools/sequencerPostApiRequestJson.js";
+import { tool$sequencerPostApiRequestMultipart } from "./tools/sequencerPostApiRequestMultipart.js";
+import { tool$sequencerPostApiRequestRaw } from "./tools/sequencerPostApiRequestRaw.js";
 
 export function createMCPServer(deps: {
   logger: ConsoleLogger;
+  allowedTools?: string[] | undefined;
   scopes?: MCPScope[] | undefined;
   serverURL: string;
   bearerAuth?: SDKOptions["bearerAuth"] | undefined;
+  serverIdx?: SDKOptions["serverIdx"] | undefined;
 }) {
   const server = new McpServer({
     name: "Chopin",
-    version: "0.0.2",
+    version: "0.1.0",
   });
 
   const client = new ChopinCore({
     bearerAuth: deps.bearerAuth,
     serverURL: deps.serverURL,
+    serverIdx: deps.serverIdx,
   });
-  const scopes = new Set(deps.scopes ?? mcpScopes);
-  const tool = createRegisterTool(deps.logger, server, client, scopes);
 
-  tool(tool$sequencerSequence);
-  tool(tool$sequencerDone);
-  tool(tool$sequencerHealth);
-  tool(tool$sequencerOpenapiJson);
+  const scopes = new Set(deps.scopes ?? mcpScopes);
+
+  const allowedTools = deps.allowedTools && new Set(deps.allowedTools);
+  const tool = createRegisterTool(
+    deps.logger,
+    server,
+    client,
+    scopes,
+    allowedTools,
+  );
+  const resource = createRegisterResource(deps.logger, server, client, scopes);
+  const resourceTemplate = createRegisterResourceTemplate(
+    deps.logger,
+    server,
+    client,
+    scopes,
+  );
+  const register = { tool, resource, resourceTemplate };
+  void register; // suppress unused warnings
+
+  tool(tool$oraclePostApiContextJson);
+  tool(tool$oraclePostApiContextMultipart);
+  tool(tool$oraclePostApiContextRaw);
+  tool(tool$sequencerPostApiRequestJson);
+  tool(tool$sequencerPostApiRequestMultipart);
+  tool(tool$sequencerPostApiRequestRaw);
 
   return server;
 }

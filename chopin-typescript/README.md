@@ -17,7 +17,7 @@ Developer-friendly & type-safe Typescript SDK specifically catered to leverage *
 <!-- Start Summary [summary] -->
 ## Summary
 
-Sequencer API: API for sequencing domain operations
+HTTP Requests API: API for managing HTTP requests and context data
 <!-- End Summary [summary] -->
 
 <!-- Start Table of Contents [toc] -->
@@ -30,6 +30,7 @@ Sequencer API: API for sequencing domain operations
   * [Authentication](#authentication)
   * [Available Resources and Operations](#available-resources-and-operations)
   * [Standalone functions](#standalone-functions)
+  * [File uploads](#file-uploads)
   * [Retries](#retries)
   * [Error Handling](#error-handling)
   * [Custom HTTP Client](#custom-http-client)
@@ -43,34 +44,30 @@ Sequencer API: API for sequencing domain operations
 <!-- Start SDK Installation [installation] -->
 ## SDK Installation
 
-> [!TIP]
-> To finish publishing your SDK to npm and others you must [run your first generation action](https://www.speakeasy.com/docs/github-setup#step-by-step-guide).
-
-
 The SDK can be installed with either [npm](https://www.npmjs.com/), [pnpm](https://pnpm.io/), [bun](https://bun.sh/) or [yarn](https://classic.yarnpkg.com/en/) package managers.
 
 ### NPM
 
 ```bash
-npm add <UNSET>
+npm add @chopinframework/sdk
 ```
 
 ### PNPM
 
 ```bash
-pnpm add <UNSET>
+pnpm add @chopinframework/sdk
 ```
 
 ### Bun
 
 ```bash
-bun add <UNSET>
+bun add @chopinframework/sdk
 ```
 
 ### Yarn
 
 ```bash
-yarn add <UNSET> zod
+yarn add @chopinframework/sdk zod
 
 # Note that Yarn does not install peer dependencies automatically. You will need
 # to install zod as shown above.
@@ -152,13 +149,10 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  const result = await chopin.sequencer.sequence({
-    domain: "accurate-eternity.info",
-    requestId: "<id>",
+  await chopin.oracle.postApiContextJson({
+    requestNonce: "<value>",
+    value: "<value>",
   });
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -187,13 +181,10 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  const result = await chopin.sequencer.sequence({
-    domain: "accurate-eternity.info",
-    requestId: "<id>",
+  await chopin.oracle.postApiContextJson({
+    requestNonce: "<value>",
+    value: "<value>",
   });
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -208,12 +199,17 @@ run();
 <summary>Available methods</summary>
 
 
+### [oracle](docs/sdks/oracle/README.md)
+
+* [postApiContextJson](docs/sdks/oracle/README.md#postapicontextjson) - Create a new context entry by request nonce
+* [postApiContextMultipart](docs/sdks/oracle/README.md#postapicontextmultipart) - Create a new context entry by request nonce
+* [postApiContextRaw](docs/sdks/oracle/README.md#postapicontextraw) - Create a new context entry by request nonce
+
 ### [sequencer](docs/sdks/sequencer/README.md)
 
-* [sequence](docs/sdks/sequencer/README.md#sequence) - Sequence operation
-* [done](docs/sdks/sequencer/README.md#done) - Done operation
-* [health](docs/sdks/sequencer/README.md#health) - Health operation
-* [openapiJson](docs/sdks/sequencer/README.md#openapijson) - Openapi_json operation
+* [postApiRequestJson](docs/sdks/sequencer/README.md#postapirequestjson) - Sequence an HTTP request
+* [postApiRequestMultipart](docs/sdks/sequencer/README.md#postapirequestmultipart) - Sequence an HTTP request
+* [postApiRequestRaw](docs/sdks/sequencer/README.md#postapirequestraw) - Sequence an HTTP request
 
 </details>
 <!-- End Available Resources and Operations [operations] -->
@@ -233,13 +229,48 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 <summary>Available standalone functions</summary>
 
-- [`sequencerDone`](docs/sdks/sequencer/README.md#done) - Done operation
-- [`sequencerHealth`](docs/sdks/sequencer/README.md#health) - Health operation
-- [`sequencerOpenapiJson`](docs/sdks/sequencer/README.md#openapijson) - Openapi_json operation
-- [`sequencerSequence`](docs/sdks/sequencer/README.md#sequence) - Sequence operation
+- [`oraclePostApiContextJson`](docs/sdks/oracle/README.md#postapicontextjson) - Create a new context entry by request nonce
+- [`oraclePostApiContextMultipart`](docs/sdks/oracle/README.md#postapicontextmultipart) - Create a new context entry by request nonce
+- [`oraclePostApiContextRaw`](docs/sdks/oracle/README.md#postapicontextraw) - Create a new context entry by request nonce
+- [`sequencerPostApiRequestJson`](docs/sdks/sequencer/README.md#postapirequestjson) - Sequence an HTTP request
+- [`sequencerPostApiRequestMultipart`](docs/sdks/sequencer/README.md#postapirequestmultipart) - Sequence an HTTP request
+- [`sequencerPostApiRequestRaw`](docs/sdks/sequencer/README.md#postapirequestraw) - Sequence an HTTP request
 
 </details>
 <!-- End Standalone functions [standalone-funcs] -->
+
+<!-- Start File uploads [file-upload] -->
+## File uploads
+
+Certain SDK methods accept files as part of a multi-part request. It is possible and typically recommended to upload files as a stream rather than reading the entire contents into memory. This avoids excessive memory consumption and potentially crashing with out-of-memory errors when working with very large files. The following example demonstrates how to attach a file stream to a request.
+
+> [!TIP]
+>
+> Depending on your JavaScript runtime, there are convenient utilities that return a handle to a file without reading the entire contents into memory:
+>
+> - **Node.js v20+:** Since v20, Node.js comes with a native `openAsBlob` function in [`node:fs`](https://nodejs.org/docs/latest-v20.x/api/fs.html#fsopenasblobpath-options).
+> - **Bun:** The native [`Bun.file`](https://bun.sh/docs/api/file-io#reading-files-bun-file) function produces a file handle that can be used for streaming file uploads.
+> - **Browsers:** All supported browsers return an instance to a [`File`](https://developer.mozilla.org/en-US/docs/Web/API/File) when reading the value from an `<input type="file">` element.
+> - **Node.js v18:** A file stream can be created using the `fileFrom` helper from [`fetch-blob/from.js`](https://www.npmjs.com/package/fetch-blob).
+
+```typescript
+import { Chopin } from "@chopinframework/sdk";
+
+const chopin = new Chopin({
+  serverURL: "https://api.example.com",
+  bearerAuth: process.env["CHOPIN_BEARER_AUTH"] ?? "",
+});
+
+async function run() {
+  await chopin.oracle.postApiContextRaw(
+    bytesToStream(new TextEncoder().encode("0x7aDCC5c134")),
+  );
+}
+
+run();
+
+```
+<!-- End File uploads [file-upload] -->
 
 <!-- Start Retries [retries] -->
 ## Retries
@@ -256,9 +287,9 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  const result = await chopin.sequencer.sequence({
-    domain: "accurate-eternity.info",
-    requestId: "<id>",
+  await chopin.oracle.postApiContextJson({
+    requestNonce: "<value>",
+    value: "<value>",
   }, {
     retries: {
       strategy: "backoff",
@@ -271,9 +302,6 @@ async function run() {
       retryConnectionErrors: false,
     },
   });
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -300,13 +328,10 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  const result = await chopin.sequencer.sequence({
-    domain: "accurate-eternity.info",
-    requestId: "<id>",
+  await chopin.oracle.postApiContextJson({
+    requestNonce: "<value>",
+    value: "<value>",
   });
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -317,21 +342,15 @@ run();
 <!-- Start Error Handling [errors] -->
 ## Error Handling
 
-Some methods specify known errors which can be thrown. All the known errors are enumerated in the `models/errors/errors.ts` module. The known errors for a method are documented under the *Errors* tables in SDK docs. For example, the `sequence` method may throw the following errors:
+If the request fails due to, for example 4XX or 5XX status codes, it will throw a `APIError`.
 
-| Error Type           | Status Code | Content Type     |
-| -------------------- | ----------- | ---------------- |
-| errors.ErrorResponse | 401         | application/json |
-| errors.APIError      | 4XX, 5XX    | \*/\*            |
-
-If the method throws an error and it is not captured by the known errors, it will default to throwing a `APIError`.
+| Error Type      | Status Code | Content Type |
+| --------------- | ----------- | ------------ |
+| errors.APIError | 4XX, 5XX    | \*/\*        |
 
 ```typescript
 import { Chopin } from "@chopinframework/sdk";
-import {
-  ErrorResponse,
-  SDKValidationError,
-} from "@chopinframework/sdk/models/errors";
+import { SDKValidationError } from "@chopinframework/sdk/models/errors";
 
 const chopin = new Chopin({
   serverURL: "https://api.example.com",
@@ -339,28 +358,27 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  let result;
   try {
-    result = await chopin.sequencer.sequence({
-      domain: "accurate-eternity.info",
-      requestId: "<id>",
+    await chopin.oracle.postApiContextJson({
+      requestNonce: "<value>",
+      value: "<value>",
     });
-
-    // Handle the result
-    console.log(result);
   } catch (err) {
     switch (true) {
       // The server response does not match the expected SDK schema
-      case (err instanceof SDKValidationError): {
-        // Pretty-print will provide a human-readable multi-line error message
-        console.error(err.pretty());
-        // Raw value may also be inspected
-        console.error(err.rawValue);
-        return;
-      }
-      case (err instanceof ErrorResponse): {
-        // Handle err.data$: ErrorResponseData
-        console.error(err);
+      case (err instanceof SDKValidationError):
+        {
+          // Pretty-print will provide a human-readable multi-line error message
+          console.error(err.pretty());
+          // Raw value may also be inspected
+          console.error(err.rawValue);
+          return;
+        }
+        apierror.js;
+      // Server returned an error status code or an unknown content type
+      case (err instanceof APIError): {
+        console.error(err.statusCode);
+        console.error(err.rawResponse.body);
         return;
       }
       default: {

@@ -8,13 +8,10 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  const result = await chopin.sequencer.sequence({
-    domain: "accurate-eternity.info",
-    requestId: "<id>",
+  await chopin.oracle.postApiContextJson({
+    requestNonce: "<value>",
+    value: "<value>",
   });
-
-  // Handle the result
-  console.log(result);
 }
 
 run();

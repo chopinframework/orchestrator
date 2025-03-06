@@ -1,19 +1,19 @@
-# Sequencer
-(*sequencer*)
+# Oracle
+(*oracle*)
 
 ## Overview
 
-Request sequencing operations
+Request context operations
 
 ### Available Operations
 
-* [postApiRequestJson](#postapirequestjson) - Sequence an HTTP request
-* [postApiRequestMultipart](#postapirequestmultipart) - Sequence an HTTP request
-* [postApiRequestRaw](#postapirequestraw) - Sequence an HTTP request
+* [postApiContextJson](#postapicontextjson) - Create a new context entry by request nonce
+* [postApiContextMultipart](#postapicontextmultipart) - Create a new context entry by request nonce
+* [postApiContextRaw](#postapicontextraw) - Create a new context entry by request nonce
 
-## postApiRequestJson
+## postApiContextJson
 
-Process an HTTP request through the sequencer
+Creates a new context entry for a request identified by its nonce
 
 ### Example Usage
 
@@ -26,11 +26,9 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.sequencer.postApiRequestJson({
-    url: "https://spotless-flight.name/",
-    method: "<value>",
-    headers: {},
-    body: "<value>",
+  await chopin.oracle.postApiContextJson({
+    requestNonce: "<value>",
+    value: "<value>",
   });
 
 
@@ -45,7 +43,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ChopinCore } from "@chopinframework/sdk/core.js";
-import { sequencerPostApiRequestJson } from "@chopinframework/sdk/funcs/sequencerPostApiRequestJson.js";
+import { oraclePostApiContextJson } from "@chopinframework/sdk/funcs/oraclePostApiContextJson.js";
 
 // Use `ChopinCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -55,11 +53,9 @@ const chopin = new ChopinCore({
 });
 
 async function run() {
-  const res = await sequencerPostApiRequestJson(chopin, {
-    url: "https://spotless-flight.name/",
-    method: "<value>",
-    headers: {},
-    body: "<value>",
+  const res = await oraclePostApiContextJson(chopin, {
+    requestNonce: "<value>",
+    value: "<value>",
   });
 
   if (!res.ok) {
@@ -78,7 +74,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.PostApiRequestJsonRequestBody](../../models/operations/postapirequestjsonrequestbody.md)                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [operations.PostApiContextJsonRequestBody](../../models/operations/postapicontextjsonrequestbody.md)                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -93,9 +89,9 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.APIError | 4XX, 5XX        | \*/\*           |
 
-## postApiRequestMultipart
+## postApiContextMultipart
 
-Process an HTTP request through the sequencer
+Creates a new context entry for a request identified by its nonce
 
 ### Example Usage
 
@@ -108,11 +104,9 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.sequencer.postApiRequestMultipart({
-    body: "<value>",
-    headers: {},
-    method: "<value>",
-    url: "https://spotless-flight.name/",
+  await chopin.oracle.postApiContextMultipart({
+    requestNonce: "<value>",
+    value: "<value>",
   });
 
 
@@ -127,7 +121,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ChopinCore } from "@chopinframework/sdk/core.js";
-import { sequencerPostApiRequestMultipart } from "@chopinframework/sdk/funcs/sequencerPostApiRequestMultipart.js";
+import { oraclePostApiContextMultipart } from "@chopinframework/sdk/funcs/oraclePostApiContextMultipart.js";
 
 // Use `ChopinCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -137,11 +131,9 @@ const chopin = new ChopinCore({
 });
 
 async function run() {
-  const res = await sequencerPostApiRequestMultipart(chopin, {
-    body: "<value>",
-    headers: {},
-    method: "<value>",
-    url: "https://spotless-flight.name/",
+  const res = await oraclePostApiContextMultipart(chopin, {
+    requestNonce: "<value>",
+    value: "<value>",
   });
 
   if (!res.ok) {
@@ -160,7 +152,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.PostApiRequestMultipartRequestBody](../../models/operations/postapirequestmultipartrequestbody.md)                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [operations.PostApiContextMultipartRequestBody](../../models/operations/postapicontextmultipartrequestbody.md)                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -175,9 +167,9 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.APIError | 4XX, 5XX        | \*/\*           |
 
-## postApiRequestRaw
+## postApiContextRaw
 
-Process an HTTP request through the sequencer
+Creates a new context entry for a request identified by its nonce
 
 ### Example Usage
 
@@ -190,7 +182,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.sequencer.postApiRequestRaw(bytesToStream(new TextEncoder().encode("0x3a76aC8DcF")));
+  await chopin.oracle.postApiContextRaw(bytesToStream(new TextEncoder().encode("0x7aDCC5c134")));
 
 
 }
@@ -204,7 +196,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ChopinCore } from "@chopinframework/sdk/core.js";
-import { sequencerPostApiRequestRaw } from "@chopinframework/sdk/funcs/sequencerPostApiRequestRaw.js";
+import { oraclePostApiContextRaw } from "@chopinframework/sdk/funcs/oraclePostApiContextRaw.js";
 
 // Use `ChopinCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -214,7 +206,7 @@ const chopin = new ChopinCore({
 });
 
 async function run() {
-  const res = await sequencerPostApiRequestRaw(chopin, bytesToStream(new TextEncoder().encode("0xF8e8204F6C")));
+  const res = await oraclePostApiContextRaw(chopin, bytesToStream(new TextEncoder().encode("0xF9f3eD4997")));
 
   if (!res.ok) {
     throw res.error;
