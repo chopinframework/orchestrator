@@ -3,7 +3,7 @@
   "info": {
     "title": "HTTP Requests API",
     "description": "API for managing HTTP requests and context data",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "tags": [
     {
