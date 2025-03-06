@@ -3,6 +3,7 @@
  */
 
 import { buildCommand } from "@stricli/core";
+import { numberParser } from "@stricli/core";
 import * as z from "zod";
 import { consoleLoggerLevels } from "../../console-logger.js";
 import { mcpScopes } from "../../scopes.js";
@@ -26,6 +27,15 @@ export const startCommand = buildCommand({
         default: "2718",
         parse: (val: string) =>
           z.coerce.number().int().gte(0).lt(65536).parse(val),
+      },
+      tool: {
+        kind: "parsed",
+        brief: "Specify tools to mount on the server",
+        optional: true,
+        variadic: true,
+        parse: (value) => {
+          return z.string().parse(value);
+        },
       },
       ...(mcpScopes.length
         ? {
@@ -52,6 +62,12 @@ export const startCommand = buildCommand({
         brief: "Overrides the default server URL used by the SDK",
         optional: false,
         parse: (value) => new URL(value).toString(),
+      },
+      "server-index": {
+        kind: "parsed",
+        brief: "Selects a predefined server used by the SDK",
+        optional: true,
+        parse: numberParser,
       },
       "log-level": {
         kind: "enum",

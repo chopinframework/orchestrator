@@ -2,6 +2,6 @@
 
 ## Overview
 
-Sequencer API: API for sequencing domain operations
+HTTP Requests API: API for managing HTTP requests and context data
 
 ### Available Operations

@@ -3,9 +3,15 @@
  */
 
 import { ClientSDK } from "../lib/sdks.js";
+import { Oracle } from "./oracle.js";
 import { Sequencer } from "./sequencer.js";
 
 export class Chopin extends ClientSDK {
+  private _oracle?: Oracle;
+  get oracle(): Oracle {
+    return (this._oracle ??= new Oracle(this._options));
+  }
+
   private _sequencer?: Sequencer;
   get sequencer(): Sequencer {
     return (this._sequencer ??= new Sequencer(this._options));
