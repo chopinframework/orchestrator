@@ -2,20 +2,20 @@ speakeasyVersion: 1.513.2
 sources:
     Sequencer API:
         sourceNamespace: sequencer-api
-        sourceRevisionDigest: sha256:4fba16c789480720c8fc65a36d98d801338507c1a1ac93b5ca3c39c2b16d291a
+        sourceRevisionDigest: sha256:4ede64b8ee33cb384b27ace78bee5c791e60f70f0b1fa5b366f44e7edc43b26a
         sourceBlobDigest: sha256:e0cb6bd99baf479265c154d3f6b85d03b2c1993659a71209343dc12c3d9ba2a9
         tags:
             - latest
-            - speakeasy-sdk-regen-1741311658
+            - speakeasy-sdk-regen-1741361506
             - 1.0.0
 targets:
     chopin:
         source: Sequencer API
         sourceNamespace: sequencer-api
-        sourceRevisionDigest: sha256:4fba16c789480720c8fc65a36d98d801338507c1a1ac93b5ca3c39c2b16d291a
+        sourceRevisionDigest: sha256:4ede64b8ee33cb384b27ace78bee5c791e60f70f0b1fa5b366f44e7edc43b26a
         sourceBlobDigest: sha256:e0cb6bd99baf479265c154d3f6b85d03b2c1993659a71209343dc12c3d9ba2a9
         codeSamplesNamespace: sequencer-api-typescript-code-samples
-        codeSamplesRevisionDigest: sha256:222ac35a129cba648d812de4fb73908ae1e67c74a17a57e5ca1d8e68bbf0bad3
+        codeSamplesRevisionDigest: sha256:5ae4fd1f92098400e437c05bdad04bca9b30516b01516e03f8ccfd9dfbde3315
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
