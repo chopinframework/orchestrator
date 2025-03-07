@@ -5,8 +5,8 @@ management:
   docVersion: 1.0.0
   speakeasyVersion: 1.513.2
   generationVersion: 2.545.2
-  releaseVersion: 0.2.0
-  configChecksum: 5659cb0d6d91d4040b474730b96f6f10
+  releaseVersion: 0.2.1
+  configChecksum: 6c192e308ef4e76c3f02739784a544df
   repoURL: https://github.com/chopinframework/orchestrator.git
   repoSubDirectory: chopin-typescript
   installationURL: https://gitpkg.now.sh/chopinframework/orchestrator/chopin-typescript
