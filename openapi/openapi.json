@@ -89,6 +89,168 @@
     "/api/v1/request": {
       "post": {
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response from remote server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Successful response from remote server"
+                }
+              },
+              "multipart/form-data": {
+                "schema": {
+                  "description": "Successful response from remote server"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "description": "Successful response from remote server"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request response from remote server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Bad request response from remote server"
+                }
+              },
+              "multipart/form-data": {
+                "schema": {
+                  "description": "Bad request response from remote server"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "description": "Bad request response from remote server"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized response from remote server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Unauthorized response from remote server"
+                }
+              },
+              "multipart/form-data": {
+                "schema": {
+                  "description": "Unauthorized response from remote server"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "description": "Unauthorized response from remote server"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden response from remote server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Forbidden response from remote server"
+                }
+              },
+              "multipart/form-data": {
+                "schema": {
+                  "description": "Forbidden response from remote server"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "description": "Forbidden response from remote server"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found response from remote server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Not found response from remote server"
+                }
+              },
+              "multipart/form-data": {
+                "schema": {
+                  "description": "Not found response from remote server"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "description": "Not found response from remote server"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error response from remote server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Server error response from remote server"
+                }
+              },
+              "multipart/form-data": {
+                "schema": {
+                  "description": "Server error response from remote server"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "description": "Server error response from remote server"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway - received invalid response from upstream server",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Bad Gateway - received invalid response from upstream server"
+                }
+              },
+              "multipart/form-data": {
+                "schema": {
+                  "description": "Bad Gateway - received invalid response from upstream server"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "description": "Bad Gateway - received invalid response from upstream server"
+                }
+              }
+            }
+          },
+          "*": {
+            "description": "Response proxied from remote server - can be any type with any status code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Response proxied from remote server - can be any type with any status code"
+                }
+              },
+              "multipart/form-data": {
+                "schema": {
+                  "description": "Response proxied from remote server - can be any type with any status code"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "description": "Response proxied from remote server - can be any type with any status code"
+                }
+              }
+            }
+          }
+        },
         "operationId": "postApiV1Request",
         "summary": "Sequence an HTTP request",
         "description": "Process an HTTP request through the sequencer",
@@ -176,8 +338,7 @@
               }
             }
           }
-        },
-        "responses": { "200": {} }
+        }
       }
     }
   }
