@@ -7,11 +7,6 @@ import { safeParse } from "../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
-/**
- * HTTP headers
- */
-export type PostApiV1RequestJsonHeaders = {};
-
 export type PostApiV1RequestJsonRequestBody = {
   /**
    * Complete URL of the request
@@ -24,62 +19,12 @@ export type PostApiV1RequestJsonRequestBody = {
   /**
    * HTTP headers
    */
-  headers: PostApiV1RequestJsonHeaders;
+  headers: { [k: string]: string };
   /**
    * The request body content
    */
   body: string;
 };
-
-/** @internal */
-export const PostApiV1RequestJsonHeaders$inboundSchema: z.ZodType<
-  PostApiV1RequestJsonHeaders,
-  z.ZodTypeDef,
-  unknown
-> = z.object({});
-
-/** @internal */
-export type PostApiV1RequestJsonHeaders$Outbound = {};
-
-/** @internal */
-export const PostApiV1RequestJsonHeaders$outboundSchema: z.ZodType<
-  PostApiV1RequestJsonHeaders$Outbound,
-  z.ZodTypeDef,
-  PostApiV1RequestJsonHeaders
-> = z.object({});
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace PostApiV1RequestJsonHeaders$ {
-  /** @deprecated use `PostApiV1RequestJsonHeaders$inboundSchema` instead. */
-  export const inboundSchema = PostApiV1RequestJsonHeaders$inboundSchema;
-  /** @deprecated use `PostApiV1RequestJsonHeaders$outboundSchema` instead. */
-  export const outboundSchema = PostApiV1RequestJsonHeaders$outboundSchema;
-  /** @deprecated use `PostApiV1RequestJsonHeaders$Outbound` instead. */
-  export type Outbound = PostApiV1RequestJsonHeaders$Outbound;
-}
-
-export function postApiV1RequestJsonHeadersToJSON(
-  postApiV1RequestJsonHeaders: PostApiV1RequestJsonHeaders,
-): string {
-  return JSON.stringify(
-    PostApiV1RequestJsonHeaders$outboundSchema.parse(
-      postApiV1RequestJsonHeaders,
-    ),
-  );
-}
-
-export function postApiV1RequestJsonHeadersFromJSON(
-  jsonString: string,
-): SafeParseResult<PostApiV1RequestJsonHeaders, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => PostApiV1RequestJsonHeaders$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'PostApiV1RequestJsonHeaders' from JSON`,
-  );
-}
 
 /** @internal */
 export const PostApiV1RequestJsonRequestBody$inboundSchema: z.ZodType<
@@ -89,7 +34,7 @@ export const PostApiV1RequestJsonRequestBody$inboundSchema: z.ZodType<
 > = z.object({
   url: z.string(),
   method: z.string(),
-  headers: z.lazy(() => PostApiV1RequestJsonHeaders$inboundSchema),
+  headers: z.record(z.string()),
   body: z.string(),
 });
 
@@ -97,7 +42,7 @@ export const PostApiV1RequestJsonRequestBody$inboundSchema: z.ZodType<
 export type PostApiV1RequestJsonRequestBody$Outbound = {
   url: string;
   method: string;
-  headers: PostApiV1RequestJsonHeaders$Outbound;
+  headers: { [k: string]: string };
   body: string;
 };
 
@@ -109,7 +54,7 @@ export const PostApiV1RequestJsonRequestBody$outboundSchema: z.ZodType<
 > = z.object({
   url: z.string(),
   method: z.string(),
-  headers: z.lazy(() => PostApiV1RequestJsonHeaders$outboundSchema),
+  headers: z.record(z.string()),
   body: z.string(),
 });
 

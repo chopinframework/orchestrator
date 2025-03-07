@@ -29,7 +29,9 @@ async function run() {
   await chopin.sequencer.postApiV1RequestJson({
     url: "https://possible-seagull.com",
     method: "<value>",
-    headers: {},
+    headers: {
+
+    },
     body: "<value>",
   });
 
@@ -58,7 +60,9 @@ async function run() {
   const res = await sequencerPostApiV1RequestJson(chopin, {
     url: "https://possible-seagull.com",
     method: "<value>",
-    headers: {},
+    headers: {
+  
+    },
     body: "<value>",
   });
 
@@ -110,7 +114,9 @@ const chopin = new Chopin({
 async function run() {
   await chopin.sequencer.postApiV1RequestMultipart({
     body: "<value>",
-    headers: {},
+    headers: {
+
+    },
     method: "<value>",
     url: "https://possible-seagull.com",
   });
@@ -139,7 +145,9 @@ const chopin = new ChopinCore({
 async function run() {
   const res = await sequencerPostApiV1RequestMultipart(chopin, {
     body: "<value>",
-    headers: {},
+    headers: {
+  
+    },
     method: "<value>",
     url: "https://possible-seagull.com",
   });

@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 7ec8f99c-f28d-478d-b407-d8a43f54c8e0
 management:
-  docChecksum: 970f145cdb487924393bc1dd366db97e
+  docChecksum: b02ca63ea1f77b990c6623972cf88d24
   docVersion: 1.0.0
   speakeasyVersion: 1.513.2
   generationVersion: 2.545.2
-  releaseVersion: 0.1.1
-  configChecksum: e3161a1c2022dff085ce01f6a35f0c95
+  releaseVersion: 0.1.2
+  configChecksum: bb797bab1c96ac8a72fdb153a20d533a
   repoURL: https://github.com/chopinframework/orchestrator.git
   repoSubDirectory: chopin-typescript
   installationURL: https://gitpkg.now.sh/chopinframework/orchestrator/chopin-typescript
@@ -40,9 +40,7 @@ generatedFiles:
   - docs/models/components/security.md
   - docs/models/operations/postapiv1contextjsonrequestbody.md
   - docs/models/operations/postapiv1contextmultipartrequestbody.md
-  - docs/models/operations/postapiv1requestjsonheaders.md
   - docs/models/operations/postapiv1requestjsonrequestbody.md
-  - docs/models/operations/postapiv1requestmultipartheaders.md
   - docs/models/operations/postapiv1requestmultipartrequestbody.md
   - docs/sdks/chopin/README.md
   - docs/sdks/oracle/README.md

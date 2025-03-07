@@ -7,7 +7,9 @@ import { PostApiV1RequestMultipartRequestBody } from "@chopinframework/sdk/model
 
 let value: PostApiV1RequestMultipartRequestBody = {
   body: "<value>",
-  headers: {},
+  headers: {
+    "key": "<value>",
+  },
   method: "<value>",
   url: "https://punctual-humor.org/",
 };
@@ -15,9 +17,9 @@ let value: PostApiV1RequestMultipartRequestBody = {
 
 ## Fields
 
-| Field                                                                                                      | Type                                                                                                       | Required                                                                                                   | Description                                                                                                |
-| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `body`                                                                                                     | *string*                                                                                                   | :heavy_check_mark:                                                                                         | The request body content                                                                                   |
-| `headers`                                                                                                  | [operations.PostApiV1RequestMultipartHeaders](../../models/operations/postapiv1requestmultipartheaders.md) | :heavy_check_mark:                                                                                         | HTTP headers                                                                                               |
-| `method`                                                                                                   | *string*                                                                                                   | :heavy_check_mark:                                                                                         | HTTP method (GET, POST, PUT, etc.)                                                                         |
-| `url`                                                                                                      | *string*                                                                                                   | :heavy_check_mark:                                                                                         | Complete URL of the request                                                                                |
+| Field                              | Type                               | Required                           | Description                        |
+| ---------------------------------- | ---------------------------------- | ---------------------------------- | ---------------------------------- |
+| `body`                             | *string*                           | :heavy_check_mark:                 | The request body content           |
+| `headers`                          | Record<string, *string*>           | :heavy_check_mark:                 | HTTP headers                       |
+| `method`                           | *string*                           | :heavy_check_mark:                 | HTTP method (GET, POST, PUT, etc.) |
+| `url`                              | *string*                           | :heavy_check_mark:                 | Complete URL of the request        |

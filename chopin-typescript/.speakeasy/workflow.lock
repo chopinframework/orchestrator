@@ -2,20 +2,20 @@ speakeasyVersion: 1.513.2
 sources:
     Sequencer API:
         sourceNamespace: sequencer-api
-        sourceRevisionDigest: sha256:fda2467cdfa24a4178a299323d61d94e87cd7caf3700d354ac269261ae8b5911
-        sourceBlobDigest: sha256:e4221078fc52f7a18ce70b276bf4618dfcf25798d3e346e96b3958d30cca5313
+        sourceRevisionDigest: sha256:75b4d690c604abcd6fa5389a06cae2fa61756d6bb44af5a360a2f7a7f936cc15
+        sourceBlobDigest: sha256:b376ff656899c42e4d30c2e622e2f97b5acefa96e40f7a06b9b9abbca59ffad0
         tags:
             - latest
-            - speakeasy-sdk-regen-1741307965
+            - speakeasy-sdk-regen-1741311473
             - 1.0.0
 targets:
     chopin:
         source: Sequencer API
         sourceNamespace: sequencer-api
-        sourceRevisionDigest: sha256:fda2467cdfa24a4178a299323d61d94e87cd7caf3700d354ac269261ae8b5911
-        sourceBlobDigest: sha256:e4221078fc52f7a18ce70b276bf4618dfcf25798d3e346e96b3958d30cca5313
+        sourceRevisionDigest: sha256:75b4d690c604abcd6fa5389a06cae2fa61756d6bb44af5a360a2f7a7f936cc15
+        sourceBlobDigest: sha256:b376ff656899c42e4d30c2e622e2f97b5acefa96e40f7a06b9b9abbca59ffad0
         codeSamplesNamespace: sequencer-api-typescript-code-samples
-        codeSamplesRevisionDigest: sha256:3d2a6c3ec7ba3c83e880fc9242824b5f63d88724941d55a39e18e7de564de0fb
+        codeSamplesRevisionDigest: sha256:d9a43d56e7f9f9f5f92fa7523d1e30de1c443e8e586b98f896fd8f2f7cc8b434
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest

@@ -7,11 +7,6 @@ import { safeParse } from "../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
-/**
- * HTTP headers
- */
-export type PostApiV1RequestMultipartHeaders = {};
-
 export type PostApiV1RequestMultipartRequestBody = {
   /**
    * The request body content
@@ -20,7 +15,7 @@ export type PostApiV1RequestMultipartRequestBody = {
   /**
    * HTTP headers
    */
-  headers: PostApiV1RequestMultipartHeaders;
+  headers: { [k: string]: string };
   /**
    * HTTP method (GET, POST, PUT, etc.)
    */
@@ -32,63 +27,13 @@ export type PostApiV1RequestMultipartRequestBody = {
 };
 
 /** @internal */
-export const PostApiV1RequestMultipartHeaders$inboundSchema: z.ZodType<
-  PostApiV1RequestMultipartHeaders,
-  z.ZodTypeDef,
-  unknown
-> = z.object({});
-
-/** @internal */
-export type PostApiV1RequestMultipartHeaders$Outbound = {};
-
-/** @internal */
-export const PostApiV1RequestMultipartHeaders$outboundSchema: z.ZodType<
-  PostApiV1RequestMultipartHeaders$Outbound,
-  z.ZodTypeDef,
-  PostApiV1RequestMultipartHeaders
-> = z.object({});
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace PostApiV1RequestMultipartHeaders$ {
-  /** @deprecated use `PostApiV1RequestMultipartHeaders$inboundSchema` instead. */
-  export const inboundSchema = PostApiV1RequestMultipartHeaders$inboundSchema;
-  /** @deprecated use `PostApiV1RequestMultipartHeaders$outboundSchema` instead. */
-  export const outboundSchema = PostApiV1RequestMultipartHeaders$outboundSchema;
-  /** @deprecated use `PostApiV1RequestMultipartHeaders$Outbound` instead. */
-  export type Outbound = PostApiV1RequestMultipartHeaders$Outbound;
-}
-
-export function postApiV1RequestMultipartHeadersToJSON(
-  postApiV1RequestMultipartHeaders: PostApiV1RequestMultipartHeaders,
-): string {
-  return JSON.stringify(
-    PostApiV1RequestMultipartHeaders$outboundSchema.parse(
-      postApiV1RequestMultipartHeaders,
-    ),
-  );
-}
-
-export function postApiV1RequestMultipartHeadersFromJSON(
-  jsonString: string,
-): SafeParseResult<PostApiV1RequestMultipartHeaders, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => PostApiV1RequestMultipartHeaders$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'PostApiV1RequestMultipartHeaders' from JSON`,
-  );
-}
-
-/** @internal */
 export const PostApiV1RequestMultipartRequestBody$inboundSchema: z.ZodType<
   PostApiV1RequestMultipartRequestBody,
   z.ZodTypeDef,
   unknown
 > = z.object({
   body: z.string(),
-  headers: z.lazy(() => PostApiV1RequestMultipartHeaders$inboundSchema),
+  headers: z.record(z.string()),
   method: z.string(),
   url: z.string(),
 });
@@ -96,7 +41,7 @@ export const PostApiV1RequestMultipartRequestBody$inboundSchema: z.ZodType<
 /** @internal */
 export type PostApiV1RequestMultipartRequestBody$Outbound = {
   body: string;
-  headers: PostApiV1RequestMultipartHeaders$Outbound;
+  headers: { [k: string]: string };
   method: string;
   url: string;
 };
@@ -108,7 +53,7 @@ export const PostApiV1RequestMultipartRequestBody$outboundSchema: z.ZodType<
   PostApiV1RequestMultipartRequestBody
 > = z.object({
   body: z.string(),
-  headers: z.lazy(() => PostApiV1RequestMultipartHeaders$outboundSchema),
+  headers: z.record(z.string()),
   method: z.string(),
   url: z.string(),
 });
