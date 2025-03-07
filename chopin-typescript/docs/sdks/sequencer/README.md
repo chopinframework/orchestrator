@@ -26,7 +26,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.sequencer.postApiV1RequestJson({
+  const result = await chopin.sequencer.postApiV1RequestJson({
     url: "https://possible-seagull.com",
     method: "<value>",
     headers: {
@@ -35,7 +35,8 @@ async function run() {
     body: "<value>",
   });
 
-
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -72,7 +73,8 @@ async function run() {
 
   const { value: result } = res;
 
-  
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -89,7 +91,7 @@ run();
 
 ### Response
 
-**Promise\<void\>**
+**Promise\<[operations.PostApiV1RequestJsonResponse](../../models/operations/postapiv1requestjsonresponse.md)\>**
 
 ### Errors
 
@@ -112,7 +114,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.sequencer.postApiV1RequestMultipart({
+  const result = await chopin.sequencer.postApiV1RequestMultipart({
     body: "<value>",
     headers: {
 
@@ -121,7 +123,8 @@ async function run() {
     url: "https://possible-seagull.com",
   });
 
-
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -158,7 +161,8 @@ async function run() {
 
   const { value: result } = res;
 
-  
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -175,7 +179,7 @@ run();
 
 ### Response
 
-**Promise\<void\>**
+**Promise\<[operations.PostApiV1RequestMultipartResponse](../../models/operations/postapiv1requestmultipartresponse.md)\>**
 
 ### Errors
 
@@ -198,9 +202,10 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.sequencer.postApiV1RequestRaw(bytesToStream(new TextEncoder().encode("0x233E5fC9a8")));
+  const result = await chopin.sequencer.postApiV1RequestRaw(bytesToStream(new TextEncoder().encode("0x233E5fC9a8")));
 
-
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -230,7 +235,8 @@ async function run() {
 
   const { value: result } = res;
 
-  
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -247,7 +253,7 @@ run();
 
 ### Response
 
-**Promise\<void\>**
+**Promise\<[operations.PostApiV1RequestRawResponse](../../models/operations/postapiv1requestrawresponse.md)\>**
 
 ### Errors
 

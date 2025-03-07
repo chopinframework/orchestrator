@@ -3,6 +3,7 @@
  */
 
 import * as z from "zod";
+import * as b64$ from "../../lib/base64.js";
 import { safeParse } from "../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
@@ -25,6 +26,14 @@ export type PostApiV1RequestJsonRequestBody = {
    */
   body: string;
 };
+
+export type PostApiV1RequestJsonResponse =
+  | any
+  | Uint8Array
+  | string
+  | string
+  | any
+  | string;
 
 /** @internal */
 export const PostApiV1RequestJsonRequestBody$inboundSchema: z.ZodType<
@@ -88,5 +97,60 @@ export function postApiV1RequestJsonRequestBodyFromJSON(
     jsonString,
     (x) => PostApiV1RequestJsonRequestBody$inboundSchema.parse(JSON.parse(x)),
     `Failed to parse 'PostApiV1RequestJsonRequestBody' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostApiV1RequestJsonResponse$inboundSchema: z.ZodType<
+  PostApiV1RequestJsonResponse,
+  z.ZodTypeDef,
+  unknown
+> = z.union([z.any(), b64$.zodInbound, z.string(), z.any(), z.string()]);
+
+/** @internal */
+export type PostApiV1RequestJsonResponse$Outbound =
+  | any
+  | Uint8Array
+  | string
+  | any
+  | string;
+
+/** @internal */
+export const PostApiV1RequestJsonResponse$outboundSchema: z.ZodType<
+  PostApiV1RequestJsonResponse$Outbound,
+  z.ZodTypeDef,
+  PostApiV1RequestJsonResponse
+> = z.union([z.any(), b64$.zodOutbound, z.string(), z.any(), z.string()]);
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace PostApiV1RequestJsonResponse$ {
+  /** @deprecated use `PostApiV1RequestJsonResponse$inboundSchema` instead. */
+  export const inboundSchema = PostApiV1RequestJsonResponse$inboundSchema;
+  /** @deprecated use `PostApiV1RequestJsonResponse$outboundSchema` instead. */
+  export const outboundSchema = PostApiV1RequestJsonResponse$outboundSchema;
+  /** @deprecated use `PostApiV1RequestJsonResponse$Outbound` instead. */
+  export type Outbound = PostApiV1RequestJsonResponse$Outbound;
+}
+
+export function postApiV1RequestJsonResponseToJSON(
+  postApiV1RequestJsonResponse: PostApiV1RequestJsonResponse,
+): string {
+  return JSON.stringify(
+    PostApiV1RequestJsonResponse$outboundSchema.parse(
+      postApiV1RequestJsonResponse,
+    ),
+  );
+}
+
+export function postApiV1RequestJsonResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<PostApiV1RequestJsonResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PostApiV1RequestJsonResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PostApiV1RequestJsonResponse' from JSON`,
   );
 }

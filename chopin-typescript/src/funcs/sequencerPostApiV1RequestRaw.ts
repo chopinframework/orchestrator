@@ -19,8 +19,15 @@ import {
   UnexpectedClientError,
 } from "../models/errors/httpclienterrors.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
+import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
+
+export enum PostApiV1RequestRawAcceptEnum {
+  applicationJson = "application/json",
+  textPlain = "text/plain",
+  multipartFormData = "multipart/form-data",
+}
 
 /**
  * Sequence an HTTP request
@@ -31,10 +38,12 @@ import { Result } from "../types/fp.js";
 export function sequencerPostApiV1RequestRaw(
   client: ChopinCore,
   request: ReadableStream<Uint8Array> | Blob | ArrayBuffer | Uint8Array,
-  options?: RequestOptions,
+  options?: RequestOptions & {
+    acceptHeaderOverride?: PostApiV1RequestRawAcceptEnum;
+  },
 ): APIPromise<
   Result<
-    void,
+    operations.PostApiV1RequestRawResponse,
     | APIError
     | SDKValidationError
     | UnexpectedClientError
@@ -54,11 +63,13 @@ export function sequencerPostApiV1RequestRaw(
 async function $do(
   client: ChopinCore,
   request: ReadableStream<Uint8Array> | Blob | ArrayBuffer | Uint8Array,
-  options?: RequestOptions,
+  options?: RequestOptions & {
+    acceptHeaderOverride?: PostApiV1RequestRawAcceptEnum;
+  },
 ): Promise<
   [
     Result<
-      void,
+      operations.PostApiV1RequestRawResponse,
       | APIError
       | SDKValidationError
       | UnexpectedClientError
@@ -91,7 +102,8 @@ async function $do(
 
   const headers = new Headers(compactMap({
     "Content-Type": "text/plain",
-    Accept: "*/*",
+    Accept: options?.acceptHeaderOverride
+      || "application/json;q=1, text/plain;q=0.7, multipart/form-data;q=0",
   }));
 
   const secConfig = await extractSecurity(client._options.bearerAuth);
@@ -128,7 +140,7 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["4XX", "5XX"],
+    errorCodes: ["400", "401", "403", "404", "4XX", "500", "502", "5XX"],
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -138,7 +150,7 @@ async function $do(
   const response = doResult.value;
 
   const [result] = await M.match<
-    void,
+    operations.PostApiV1RequestRawResponse,
     | APIError
     | SDKValidationError
     | UnexpectedClientError
@@ -147,9 +159,18 @@ async function $do(
     | RequestTimeoutError
     | ConnectionError
   >(
-    M.nil(200, z.void()),
-    M.fail("4XX"),
-    M.fail("5XX"),
+    M.json(200, operations.PostApiV1RequestRawResponse$inboundSchema),
+    M.bytes(200, operations.PostApiV1RequestRawResponse$inboundSchema, {
+      ctype: "multipart/form-data",
+    }),
+    M.text(200, operations.PostApiV1RequestRawResponse$inboundSchema),
+    M.bytes("*", operations.PostApiV1RequestRawResponse$inboundSchema, {
+      ctype: "multipart/form-data",
+    }),
+    M.json("*", operations.PostApiV1RequestRawResponse$inboundSchema),
+    M.text("*", operations.PostApiV1RequestRawResponse$inboundSchema),
+    M.fail([400, 401, 403, 404, "4XX"]),
+    M.fail([500, 502, "5XX"]),
   )(response);
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];

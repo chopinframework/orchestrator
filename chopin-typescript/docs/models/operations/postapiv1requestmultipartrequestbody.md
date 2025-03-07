@@ -11,7 +11,7 @@ let value: PostApiV1RequestMultipartRequestBody = {
     "key": "<value>",
   },
   method: "<value>",
-  url: "https://punctual-humor.org/",
+  url: "https://bright-agreement.net/",
 };
 ```
 

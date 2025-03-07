@@ -3,6 +3,7 @@
  */
 
 import * as z from "zod";
+import * as b64$ from "../../lib/base64.js";
 import { safeParse } from "../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
@@ -25,6 +26,14 @@ export type PostApiV1RequestMultipartRequestBody = {
    */
   url: string;
 };
+
+export type PostApiV1RequestMultipartResponse =
+  | any
+  | Uint8Array
+  | string
+  | string
+  | any
+  | string;
 
 /** @internal */
 export const PostApiV1RequestMultipartRequestBody$inboundSchema: z.ZodType<
@@ -91,5 +100,61 @@ export function postApiV1RequestMultipartRequestBodyFromJSON(
     (x) =>
       PostApiV1RequestMultipartRequestBody$inboundSchema.parse(JSON.parse(x)),
     `Failed to parse 'PostApiV1RequestMultipartRequestBody' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostApiV1RequestMultipartResponse$inboundSchema: z.ZodType<
+  PostApiV1RequestMultipartResponse,
+  z.ZodTypeDef,
+  unknown
+> = z.union([z.any(), b64$.zodInbound, z.string(), z.any(), z.string()]);
+
+/** @internal */
+export type PostApiV1RequestMultipartResponse$Outbound =
+  | any
+  | Uint8Array
+  | string
+  | any
+  | string;
+
+/** @internal */
+export const PostApiV1RequestMultipartResponse$outboundSchema: z.ZodType<
+  PostApiV1RequestMultipartResponse$Outbound,
+  z.ZodTypeDef,
+  PostApiV1RequestMultipartResponse
+> = z.union([z.any(), b64$.zodOutbound, z.string(), z.any(), z.string()]);
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace PostApiV1RequestMultipartResponse$ {
+  /** @deprecated use `PostApiV1RequestMultipartResponse$inboundSchema` instead. */
+  export const inboundSchema = PostApiV1RequestMultipartResponse$inboundSchema;
+  /** @deprecated use `PostApiV1RequestMultipartResponse$outboundSchema` instead. */
+  export const outboundSchema =
+    PostApiV1RequestMultipartResponse$outboundSchema;
+  /** @deprecated use `PostApiV1RequestMultipartResponse$Outbound` instead. */
+  export type Outbound = PostApiV1RequestMultipartResponse$Outbound;
+}
+
+export function postApiV1RequestMultipartResponseToJSON(
+  postApiV1RequestMultipartResponse: PostApiV1RequestMultipartResponse,
+): string {
+  return JSON.stringify(
+    PostApiV1RequestMultipartResponse$outboundSchema.parse(
+      postApiV1RequestMultipartResponse,
+    ),
+  );
+}
+
+export function postApiV1RequestMultipartResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<PostApiV1RequestMultipartResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PostApiV1RequestMultipartResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PostApiV1RequestMultipartResponse' from JSON`,
   );
 }
