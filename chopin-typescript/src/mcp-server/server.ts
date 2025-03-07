@@ -12,12 +12,12 @@ import {
 } from "./resources.js";
 import { MCPScope, mcpScopes } from "./scopes.js";
 import { createRegisterTool } from "./tools.js";
-import { tool$oraclePostApiContextJson } from "./tools/oraclePostApiContextJson.js";
-import { tool$oraclePostApiContextMultipart } from "./tools/oraclePostApiContextMultipart.js";
-import { tool$oraclePostApiContextRaw } from "./tools/oraclePostApiContextRaw.js";
-import { tool$sequencerPostApiRequestJson } from "./tools/sequencerPostApiRequestJson.js";
-import { tool$sequencerPostApiRequestMultipart } from "./tools/sequencerPostApiRequestMultipart.js";
-import { tool$sequencerPostApiRequestRaw } from "./tools/sequencerPostApiRequestRaw.js";
+import { tool$oraclePostApiV1ContextJson } from "./tools/oraclePostApiV1ContextJson.js";
+import { tool$oraclePostApiV1ContextMultipart } from "./tools/oraclePostApiV1ContextMultipart.js";
+import { tool$oraclePostApiV1ContextRaw } from "./tools/oraclePostApiV1ContextRaw.js";
+import { tool$sequencerPostApiV1RequestJson } from "./tools/sequencerPostApiV1RequestJson.js";
+import { tool$sequencerPostApiV1RequestMultipart } from "./tools/sequencerPostApiV1RequestMultipart.js";
+import { tool$sequencerPostApiV1RequestRaw } from "./tools/sequencerPostApiV1RequestRaw.js";
 
 export function createMCPServer(deps: {
   logger: ConsoleLogger;
@@ -29,7 +29,7 @@ export function createMCPServer(deps: {
 }) {
   const server = new McpServer({
     name: "Chopin",
-    version: "0.1.0",
+    version: "0.1.1",
   });
 
   const client = new ChopinCore({
@@ -58,12 +58,12 @@ export function createMCPServer(deps: {
   const register = { tool, resource, resourceTemplate };
   void register; // suppress unused warnings
 
-  tool(tool$oraclePostApiContextJson);
-  tool(tool$oraclePostApiContextMultipart);
-  tool(tool$oraclePostApiContextRaw);
-  tool(tool$sequencerPostApiRequestJson);
-  tool(tool$sequencerPostApiRequestMultipart);
-  tool(tool$sequencerPostApiRequestRaw);
+  tool(tool$oraclePostApiV1ContextJson);
+  tool(tool$oraclePostApiV1ContextMultipart);
+  tool(tool$oraclePostApiV1ContextRaw);
+  tool(tool$sequencerPostApiV1RequestJson);
+  tool(tool$sequencerPostApiV1RequestMultipart);
+  tool(tool$sequencerPostApiV1RequestRaw);
 
   return server;
 }

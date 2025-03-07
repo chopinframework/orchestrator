@@ -3,7 +3,7 @@
  */
 
 import * as z from "zod";
-import { sequencerPostApiRequestRaw } from "../../funcs/sequencerPostApiRequestRaw.js";
+import { sequencerPostApiV1RequestRaw } from "../../funcs/sequencerPostApiV1RequestRaw.js";
 import { formatResult, ToolDefinition } from "../tools.js";
 
 const args = {
@@ -15,14 +15,14 @@ const args = {
   ]),
 };
 
-export const tool$sequencerPostApiRequestRaw: ToolDefinition<typeof args> = {
-  name: "sequencer_post-api-request-raw",
+export const tool$sequencerPostApiV1RequestRaw: ToolDefinition<typeof args> = {
+  name: "sequencer_post-api-v1-request-raw",
   description: `Sequence an HTTP request
 
 Process an HTTP request through the sequencer`,
   args,
   tool: async (client, args, ctx) => {
-    const [result, apiCall] = await sequencerPostApiRequestRaw(
+    const [result, apiCall] = await sequencerPostApiV1RequestRaw(
       client,
       args.request,
       { fetchOptions: { signal: ctx.signal } },

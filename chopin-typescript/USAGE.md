@@ -8,7 +8,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.oracle.postApiContextJson({
+  await chopin.oracle.postApiV1ContextJson({
     requestNonce: "<value>",
     value: "<value>",
   });

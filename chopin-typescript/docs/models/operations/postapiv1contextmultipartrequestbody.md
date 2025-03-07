@@ -1,11 +1,11 @@
-# PostApiContextMultipartRequestBody
+# PostApiV1ContextMultipartRequestBody
 
 ## Example Usage
 
 ```typescript
-import { PostApiContextMultipartRequestBody } from "@chopinframework/sdk/models/operations";
+import { PostApiV1ContextMultipartRequestBody } from "@chopinframework/sdk/models/operations";
 
-let value: PostApiContextMultipartRequestBody = {
+let value: PostApiV1ContextMultipartRequestBody = {
   requestNonce: "<value>",
   value: "<value>",
 };

@@ -7,11 +7,11 @@ Request context operations
 
 ### Available Operations
 
-* [postApiContextJson](#postapicontextjson) - Create a new context entry by request nonce
-* [postApiContextMultipart](#postapicontextmultipart) - Create a new context entry by request nonce
-* [postApiContextRaw](#postapicontextraw) - Create a new context entry by request nonce
+* [postApiV1ContextJson](#postapiv1contextjson) - Create a new context entry by request nonce
+* [postApiV1ContextMultipart](#postapiv1contextmultipart) - Create a new context entry by request nonce
+* [postApiV1ContextRaw](#postapiv1contextraw) - Create a new context entry by request nonce
 
-## postApiContextJson
+## postApiV1ContextJson
 
 Creates a new context entry for a request identified by its nonce
 
@@ -26,7 +26,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.oracle.postApiContextJson({
+  await chopin.oracle.postApiV1ContextJson({
     requestNonce: "<value>",
     value: "<value>",
   });
@@ -43,7 +43,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ChopinCore } from "@chopinframework/sdk/core.js";
-import { oraclePostApiContextJson } from "@chopinframework/sdk/funcs/oraclePostApiContextJson.js";
+import { oraclePostApiV1ContextJson } from "@chopinframework/sdk/funcs/oraclePostApiV1ContextJson.js";
 
 // Use `ChopinCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -53,7 +53,7 @@ const chopin = new ChopinCore({
 });
 
 async function run() {
-  const res = await oraclePostApiContextJson(chopin, {
+  const res = await oraclePostApiV1ContextJson(chopin, {
     requestNonce: "<value>",
     value: "<value>",
   });
@@ -74,7 +74,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.PostApiContextJsonRequestBody](../../models/operations/postapicontextjsonrequestbody.md)                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [operations.PostApiV1ContextJsonRequestBody](../../models/operations/postapiv1contextjsonrequestbody.md)                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -89,7 +89,7 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.APIError | 4XX, 5XX        | \*/\*           |
 
-## postApiContextMultipart
+## postApiV1ContextMultipart
 
 Creates a new context entry for a request identified by its nonce
 
@@ -104,7 +104,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.oracle.postApiContextMultipart({
+  await chopin.oracle.postApiV1ContextMultipart({
     requestNonce: "<value>",
     value: "<value>",
   });
@@ -121,7 +121,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ChopinCore } from "@chopinframework/sdk/core.js";
-import { oraclePostApiContextMultipart } from "@chopinframework/sdk/funcs/oraclePostApiContextMultipart.js";
+import { oraclePostApiV1ContextMultipart } from "@chopinframework/sdk/funcs/oraclePostApiV1ContextMultipart.js";
 
 // Use `ChopinCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -131,7 +131,7 @@ const chopin = new ChopinCore({
 });
 
 async function run() {
-  const res = await oraclePostApiContextMultipart(chopin, {
+  const res = await oraclePostApiV1ContextMultipart(chopin, {
     requestNonce: "<value>",
     value: "<value>",
   });
@@ -152,7 +152,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.PostApiContextMultipartRequestBody](../../models/operations/postapicontextmultipartrequestbody.md)                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [operations.PostApiV1ContextMultipartRequestBody](../../models/operations/postapiv1contextmultipartrequestbody.md)                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -167,7 +167,7 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.APIError | 4XX, 5XX        | \*/\*           |
 
-## postApiContextRaw
+## postApiV1ContextRaw
 
 Creates a new context entry for a request identified by its nonce
 
@@ -182,7 +182,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.oracle.postApiContextRaw(bytesToStream(new TextEncoder().encode("0x7aDCC5c134")));
+  await chopin.oracle.postApiV1ContextRaw(bytesToStream(new TextEncoder().encode("0x29DB7fEcED")));
 
 
 }
@@ -196,7 +196,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ChopinCore } from "@chopinframework/sdk/core.js";
-import { oraclePostApiContextRaw } from "@chopinframework/sdk/funcs/oraclePostApiContextRaw.js";
+import { oraclePostApiV1ContextRaw } from "@chopinframework/sdk/funcs/oraclePostApiV1ContextRaw.js";
 
 // Use `ChopinCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -206,7 +206,7 @@ const chopin = new ChopinCore({
 });
 
 async function run() {
-  const res = await oraclePostApiContextRaw(chopin, bytesToStream(new TextEncoder().encode("0xF9f3eD4997")));
+  const res = await oraclePostApiV1ContextRaw(chopin, bytesToStream(new TextEncoder().encode("0x5BFf91eFb0")));
 
   if (!res.ok) {
     throw res.error;

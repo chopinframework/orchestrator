@@ -7,11 +7,11 @@ Request sequencing operations
 
 ### Available Operations
 
-* [postApiRequestJson](#postapirequestjson) - Sequence an HTTP request
-* [postApiRequestMultipart](#postapirequestmultipart) - Sequence an HTTP request
-* [postApiRequestRaw](#postapirequestraw) - Sequence an HTTP request
+* [postApiV1RequestJson](#postapiv1requestjson) - Sequence an HTTP request
+* [postApiV1RequestMultipart](#postapiv1requestmultipart) - Sequence an HTTP request
+* [postApiV1RequestRaw](#postapiv1requestraw) - Sequence an HTTP request
 
-## postApiRequestJson
+## postApiV1RequestJson
 
 Process an HTTP request through the sequencer
 
@@ -26,8 +26,8 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.sequencer.postApiRequestJson({
-    url: "https://spotless-flight.name/",
+  await chopin.sequencer.postApiV1RequestJson({
+    url: "https://possible-seagull.com",
     method: "<value>",
     headers: {},
     body: "<value>",
@@ -45,7 +45,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ChopinCore } from "@chopinframework/sdk/core.js";
-import { sequencerPostApiRequestJson } from "@chopinframework/sdk/funcs/sequencerPostApiRequestJson.js";
+import { sequencerPostApiV1RequestJson } from "@chopinframework/sdk/funcs/sequencerPostApiV1RequestJson.js";
 
 // Use `ChopinCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -55,8 +55,8 @@ const chopin = new ChopinCore({
 });
 
 async function run() {
-  const res = await sequencerPostApiRequestJson(chopin, {
-    url: "https://spotless-flight.name/",
+  const res = await sequencerPostApiV1RequestJson(chopin, {
+    url: "https://possible-seagull.com",
     method: "<value>",
     headers: {},
     body: "<value>",
@@ -78,7 +78,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.PostApiRequestJsonRequestBody](../../models/operations/postapirequestjsonrequestbody.md)                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [operations.PostApiV1RequestJsonRequestBody](../../models/operations/postapiv1requestjsonrequestbody.md)                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -93,7 +93,7 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.APIError | 4XX, 5XX        | \*/\*           |
 
-## postApiRequestMultipart
+## postApiV1RequestMultipart
 
 Process an HTTP request through the sequencer
 
@@ -108,11 +108,11 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.sequencer.postApiRequestMultipart({
+  await chopin.sequencer.postApiV1RequestMultipart({
     body: "<value>",
     headers: {},
     method: "<value>",
-    url: "https://spotless-flight.name/",
+    url: "https://possible-seagull.com",
   });
 
 
@@ -127,7 +127,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ChopinCore } from "@chopinframework/sdk/core.js";
-import { sequencerPostApiRequestMultipart } from "@chopinframework/sdk/funcs/sequencerPostApiRequestMultipart.js";
+import { sequencerPostApiV1RequestMultipart } from "@chopinframework/sdk/funcs/sequencerPostApiV1RequestMultipart.js";
 
 // Use `ChopinCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -137,11 +137,11 @@ const chopin = new ChopinCore({
 });
 
 async function run() {
-  const res = await sequencerPostApiRequestMultipart(chopin, {
+  const res = await sequencerPostApiV1RequestMultipart(chopin, {
     body: "<value>",
     headers: {},
     method: "<value>",
-    url: "https://spotless-flight.name/",
+    url: "https://possible-seagull.com",
   });
 
   if (!res.ok) {
@@ -160,7 +160,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.PostApiRequestMultipartRequestBody](../../models/operations/postapirequestmultipartrequestbody.md)                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `request`                                                                                                                                                                      | [operations.PostApiV1RequestMultipartRequestBody](../../models/operations/postapiv1requestmultipartrequestbody.md)                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -175,7 +175,7 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.APIError | 4XX, 5XX        | \*/\*           |
 
-## postApiRequestRaw
+## postApiV1RequestRaw
 
 Process an HTTP request through the sequencer
 
@@ -190,7 +190,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.sequencer.postApiRequestRaw(bytesToStream(new TextEncoder().encode("0x3a76aC8DcF")));
+  await chopin.sequencer.postApiV1RequestRaw(bytesToStream(new TextEncoder().encode("0x233E5fC9a8")));
 
 
 }
@@ -204,7 +204,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ChopinCore } from "@chopinframework/sdk/core.js";
-import { sequencerPostApiRequestRaw } from "@chopinframework/sdk/funcs/sequencerPostApiRequestRaw.js";
+import { sequencerPostApiV1RequestRaw } from "@chopinframework/sdk/funcs/sequencerPostApiV1RequestRaw.js";
 
 // Use `ChopinCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -214,7 +214,7 @@ const chopin = new ChopinCore({
 });
 
 async function run() {
-  const res = await sequencerPostApiRequestRaw(chopin, bytesToStream(new TextEncoder().encode("0xF8e8204F6C")));
+  const res = await sequencerPostApiV1RequestRaw(chopin, bytesToStream(new TextEncoder().encode("0x313e7CC0FF")));
 
   if (!res.ok) {
     throw res.error;

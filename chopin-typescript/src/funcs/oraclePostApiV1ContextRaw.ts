@@ -28,7 +28,7 @@ import { Result } from "../types/fp.js";
  * @remarks
  * Creates a new context entry for a request identified by its nonce
  */
-export function oraclePostApiContextRaw(
+export function oraclePostApiV1ContextRaw(
   client: ChopinCore,
   request: ReadableStream<Uint8Array> | Blob | ArrayBuffer | Uint8Array,
   options?: RequestOptions,
@@ -87,7 +87,7 @@ async function $do(
   const payload = parsed.value;
   const body = payload;
 
-  const path = pathToFunc("/api//context")();
+  const path = pathToFunc("/api/v1/context")();
 
   const headers = new Headers(compactMap({
     "Content-Type": "text/plain",
@@ -100,7 +100,7 @@ async function $do(
 
   const context = {
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "postApiContext_raw",
+    operationID: "postApiV1Context_raw",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,
