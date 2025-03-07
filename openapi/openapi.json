@@ -3,17 +3,11 @@
   "info": {
     "title": "HTTP Requests API",
     "description": "API for managing HTTP requests and context data",
-    "version": "1.0.1"
+    "version": "1.0.0"
   },
   "tags": [
-    {
-      "name": "oracle",
-      "description": "Request context operations"
-    },
-    {
-      "name": "sequencer",
-      "description": "Request sequencing operations"
-    }
+    { "name": "oracle", "description": "Request context operations" },
+    { "name": "sequencer", "description": "Request sequencing operations" }
   ],
   "components": {
     "securitySchemes": {
@@ -26,24 +20,16 @@
     },
     "schemas": {}
   },
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
+  "security": [{ "bearerAuth": [] }],
   "paths": {
-    "/api//context": {
+    "/api/v1/context": {
       "post": {
         "parameters": [],
-        "operationId": "postApiContext",
+        "operationId": "postApiV1Context",
         "summary": "Create a new context entry by request nonce",
         "description": "Creates a new context entry for a request identified by its nonce",
         "tags": ["oracle"],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -97,23 +83,17 @@
             }
           }
         },
-        "responses": {
-          "200": {}
-        }
+        "responses": { "200": {} }
       }
     },
-    "/api//request": {
+    "/api/v1/request": {
       "post": {
         "parameters": [],
-        "operationId": "postApiRequest",
+        "operationId": "postApiV1Request",
         "summary": "Sequence an HTTP request",
         "description": "Process an HTTP request through the sequencer",
         "tags": ["sequencer"],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -132,11 +112,7 @@
                   "headers": {
                     "description": "HTTP headers",
                     "type": "object",
-                    "patternProperties": {
-                      "^(.*)$": {
-                        "type": "string"
-                      }
-                    }
+                    "patternProperties": { "^(.*)$": { "type": "string" } }
                   },
                   "body": {
                     "description": "The request body content",
@@ -161,11 +137,7 @@
                   "headers": {
                     "description": "HTTP headers",
                     "type": "object",
-                    "patternProperties": {
-                      "^(.*)$": {
-                        "type": "string"
-                      }
-                    }
+                    "patternProperties": { "^(.*)$": { "type": "string" } }
                   },
                   "body": {
                     "description": "The request body content",
@@ -190,11 +162,7 @@
                   "headers": {
                     "description": "HTTP headers",
                     "type": "object",
-                    "patternProperties": {
-                      "^(.*)$": {
-                        "type": "string"
-                      }
-                    }
+                    "patternProperties": { "^(.*)$": { "type": "string" } }
                   },
                   "body": {
                     "description": "The request body content",
@@ -206,9 +174,7 @@
             }
           }
         },
-        "responses": {
-          "200": {}
-        }
+        "responses": { "200": {} }
       }
     }
   }
