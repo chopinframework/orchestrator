@@ -4,7 +4,7 @@
 
 import * as z from "zod";
 import { ChopinCore } from "../core.js";
-import { appendForm } from "../lib/encodings.js";
+import { appendForm, encodeJSON } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -25,14 +25,14 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Create a new context entry by request nonce
+ * Sequence an HTTP request
  *
  * @remarks
- * Creates a new context entry for a request identified by its nonce
+ * Process an HTTP request through the sequencer
  */
-export function oraclePostApiContextMultipart(
+export function sequencerPostApiV1RequestMultipart(
   client: ChopinCore,
-  request: operations.PostApiContextMultipartRequestBody,
+  request: operations.PostApiV1RequestMultipartRequestBody,
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -55,7 +55,7 @@ export function oraclePostApiContextMultipart(
 
 async function $do(
   client: ChopinCore,
-  request: operations.PostApiContextMultipartRequestBody,
+  request: operations.PostApiV1RequestMultipartRequestBody,
   options?: RequestOptions,
 ): Promise<
   [
@@ -75,7 +75,9 @@ async function $do(
   const parsed = safeParse(
     request,
     (value) =>
-      operations.PostApiContextMultipartRequestBody$outboundSchema.parse(value),
+      operations.PostApiV1RequestMultipartRequestBody$outboundSchema.parse(
+        value,
+      ),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -84,10 +86,16 @@ async function $do(
   const payload = parsed.value;
   const body = new FormData();
 
-  appendForm(body, "requestNonce", payload.requestNonce);
-  appendForm(body, "value", payload.value);
+  appendForm(body, "body", payload.body);
+  appendForm(
+    body,
+    "headers",
+    encodeJSON("headers", payload.headers, { explode: true }),
+  );
+  appendForm(body, "method", payload.method);
+  appendForm(body, "url", payload.url);
 
-  const path = pathToFunc("/api//context")();
+  const path = pathToFunc("/api/v1/request")();
 
   const headers = new Headers(compactMap({
     Accept: "*/*",
@@ -99,7 +107,7 @@ async function $do(
 
   const context = {
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "postApiContext_multipart",
+    operationID: "postApiV1Request_multipart",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,

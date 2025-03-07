@@ -25,14 +25,14 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Create a new context entry by request nonce
+ * Sequence an HTTP request
  *
  * @remarks
- * Creates a new context entry for a request identified by its nonce
+ * Process an HTTP request through the sequencer
  */
-export function oraclePostApiContextJson(
+export function sequencerPostApiV1RequestJson(
   client: ChopinCore,
-  request: operations.PostApiContextJsonRequestBody,
+  request: operations.PostApiV1RequestJsonRequestBody,
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -55,7 +55,7 @@ export function oraclePostApiContextJson(
 
 async function $do(
   client: ChopinCore,
-  request: operations.PostApiContextJsonRequestBody,
+  request: operations.PostApiV1RequestJsonRequestBody,
   options?: RequestOptions,
 ): Promise<
   [
@@ -75,7 +75,7 @@ async function $do(
   const parsed = safeParse(
     request,
     (value) =>
-      operations.PostApiContextJsonRequestBody$outboundSchema.parse(value),
+      operations.PostApiV1RequestJsonRequestBody$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -84,7 +84,7 @@ async function $do(
   const payload = parsed.value;
   const body = encodeJSON("body", payload, { explode: true });
 
-  const path = pathToFunc("/api//context")();
+  const path = pathToFunc("/api/v1/request")();
 
   const headers = new Headers(compactMap({
     "Content-Type": "application/json",
@@ -97,7 +97,7 @@ async function $do(
 
   const context = {
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "postApiContext_json",
+    operationID: "postApiV1Request_json",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,

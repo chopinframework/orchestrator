@@ -149,7 +149,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.oracle.postApiContextJson({
+  await chopin.oracle.postApiV1ContextJson({
     requestNonce: "<value>",
     value: "<value>",
   });
@@ -181,7 +181,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.oracle.postApiContextJson({
+  await chopin.oracle.postApiV1ContextJson({
     requestNonce: "<value>",
     value: "<value>",
   });
@@ -201,15 +201,15 @@ run();
 
 ### [oracle](docs/sdks/oracle/README.md)
 
-* [postApiContextJson](docs/sdks/oracle/README.md#postapicontextjson) - Create a new context entry by request nonce
-* [postApiContextMultipart](docs/sdks/oracle/README.md#postapicontextmultipart) - Create a new context entry by request nonce
-* [postApiContextRaw](docs/sdks/oracle/README.md#postapicontextraw) - Create a new context entry by request nonce
+* [postApiV1ContextJson](docs/sdks/oracle/README.md#postapiv1contextjson) - Create a new context entry by request nonce
+* [postApiV1ContextMultipart](docs/sdks/oracle/README.md#postapiv1contextmultipart) - Create a new context entry by request nonce
+* [postApiV1ContextRaw](docs/sdks/oracle/README.md#postapiv1contextraw) - Create a new context entry by request nonce
 
 ### [sequencer](docs/sdks/sequencer/README.md)
 
-* [postApiRequestJson](docs/sdks/sequencer/README.md#postapirequestjson) - Sequence an HTTP request
-* [postApiRequestMultipart](docs/sdks/sequencer/README.md#postapirequestmultipart) - Sequence an HTTP request
-* [postApiRequestRaw](docs/sdks/sequencer/README.md#postapirequestraw) - Sequence an HTTP request
+* [postApiV1RequestJson](docs/sdks/sequencer/README.md#postapiv1requestjson) - Sequence an HTTP request
+* [postApiV1RequestMultipart](docs/sdks/sequencer/README.md#postapiv1requestmultipart) - Sequence an HTTP request
+* [postApiV1RequestRaw](docs/sdks/sequencer/README.md#postapiv1requestraw) - Sequence an HTTP request
 
 </details>
 <!-- End Available Resources and Operations [operations] -->
@@ -229,12 +229,12 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 <summary>Available standalone functions</summary>
 
-- [`oraclePostApiContextJson`](docs/sdks/oracle/README.md#postapicontextjson) - Create a new context entry by request nonce
-- [`oraclePostApiContextMultipart`](docs/sdks/oracle/README.md#postapicontextmultipart) - Create a new context entry by request nonce
-- [`oraclePostApiContextRaw`](docs/sdks/oracle/README.md#postapicontextraw) - Create a new context entry by request nonce
-- [`sequencerPostApiRequestJson`](docs/sdks/sequencer/README.md#postapirequestjson) - Sequence an HTTP request
-- [`sequencerPostApiRequestMultipart`](docs/sdks/sequencer/README.md#postapirequestmultipart) - Sequence an HTTP request
-- [`sequencerPostApiRequestRaw`](docs/sdks/sequencer/README.md#postapirequestraw) - Sequence an HTTP request
+- [`oraclePostApiV1ContextJson`](docs/sdks/oracle/README.md#postapiv1contextjson) - Create a new context entry by request nonce
+- [`oraclePostApiV1ContextMultipart`](docs/sdks/oracle/README.md#postapiv1contextmultipart) - Create a new context entry by request nonce
+- [`oraclePostApiV1ContextRaw`](docs/sdks/oracle/README.md#postapiv1contextraw) - Create a new context entry by request nonce
+- [`sequencerPostApiV1RequestJson`](docs/sdks/sequencer/README.md#postapiv1requestjson) - Sequence an HTTP request
+- [`sequencerPostApiV1RequestMultipart`](docs/sdks/sequencer/README.md#postapiv1requestmultipart) - Sequence an HTTP request
+- [`sequencerPostApiV1RequestRaw`](docs/sdks/sequencer/README.md#postapiv1requestraw) - Sequence an HTTP request
 
 </details>
 <!-- End Standalone functions [standalone-funcs] -->
@@ -262,8 +262,8 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.oracle.postApiContextRaw(
-    bytesToStream(new TextEncoder().encode("0x7aDCC5c134")),
+  await chopin.oracle.postApiV1ContextRaw(
+    bytesToStream(new TextEncoder().encode("0x29DB7fEcED")),
   );
 }
 
@@ -287,7 +287,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.oracle.postApiContextJson({
+  await chopin.oracle.postApiV1ContextJson({
     requestNonce: "<value>",
     value: "<value>",
   }, {
@@ -328,7 +328,7 @@ const chopin = new Chopin({
 });
 
 async function run() {
-  await chopin.oracle.postApiContextJson({
+  await chopin.oracle.postApiV1ContextJson({
     requestNonce: "<value>",
     value: "<value>",
   });
@@ -359,7 +359,7 @@ const chopin = new Chopin({
 
 async function run() {
   try {
-    await chopin.oracle.postApiContextJson({
+    await chopin.oracle.postApiV1ContextJson({
       requestNonce: "<value>",
       value: "<value>",
     });

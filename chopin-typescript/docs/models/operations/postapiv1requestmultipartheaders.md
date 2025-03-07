@@ -1,13 +1,13 @@
-# PostApiRequestJsonHeaders
+# PostApiV1RequestMultipartHeaders
 
 HTTP headers
 
 ## Example Usage
 
 ```typescript
-import { PostApiRequestJsonHeaders } from "@chopinframework/sdk/models/operations";
+import { PostApiV1RequestMultipartHeaders } from "@chopinframework/sdk/models/operations";
 
-let value: PostApiRequestJsonHeaders = {};
+let value: PostApiV1RequestMultipartHeaders = {};
 ```
 
 ## Fields

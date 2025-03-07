@@ -4,6 +4,7 @@
 
 import * as z from "zod";
 import { ChopinCore } from "../core.js";
+import { encodeJSON } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -19,18 +20,19 @@ import {
   UnexpectedClientError,
 } from "../models/errors/httpclienterrors.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
+import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Sequence an HTTP request
+ * Create a new context entry by request nonce
  *
  * @remarks
- * Process an HTTP request through the sequencer
+ * Creates a new context entry for a request identified by its nonce
  */
-export function sequencerPostApiRequestRaw(
+export function oraclePostApiV1ContextJson(
   client: ChopinCore,
-  request: ReadableStream<Uint8Array> | Blob | ArrayBuffer | Uint8Array,
+  request: operations.PostApiV1ContextJsonRequestBody,
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -53,7 +55,7 @@ export function sequencerPostApiRequestRaw(
 
 async function $do(
   client: ChopinCore,
-  request: ReadableStream<Uint8Array> | Blob | ArrayBuffer | Uint8Array,
+  request: operations.PostApiV1ContextJsonRequestBody,
   options?: RequestOptions,
 ): Promise<
   [
@@ -73,24 +75,19 @@ async function $do(
   const parsed = safeParse(
     request,
     (value) =>
-      z.union([
-        z.instanceof(ReadableStream<Uint8Array>),
-        z.instanceof(Blob),
-        z.instanceof(ArrayBuffer),
-        z.instanceof(Uint8Array),
-      ]).parse(value),
+      operations.PostApiV1ContextJsonRequestBody$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
     return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
-  const body = payload;
+  const body = encodeJSON("body", payload, { explode: true });
 
-  const path = pathToFunc("/api//request")();
+  const path = pathToFunc("/api/v1/context")();
 
   const headers = new Headers(compactMap({
-    "Content-Type": "text/plain",
+    "Content-Type": "application/json",
     Accept: "*/*",
   }));
 
@@ -100,7 +97,7 @@ async function $do(
 
   const context = {
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "postApiRequest_raw",
+    operationID: "postApiV1Context_json",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,

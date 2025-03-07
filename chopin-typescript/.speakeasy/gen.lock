@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 7ec8f99c-f28d-478d-b407-d8a43f54c8e0
 management:
-  docChecksum: a28bf815944dbf3b73bf9a36740f0bda
-  docVersion: 1.0.1
-  speakeasyVersion: 1.513.1
-  generationVersion: 2.545.1
-  releaseVersion: 0.1.0
-  configChecksum: 557f7e7c013480817bd7c929252b13fe
+  docChecksum: 970f145cdb487924393bc1dd366db97e
+  docVersion: 1.0.0
+  speakeasyVersion: 1.513.2
+  generationVersion: 2.545.2
+  releaseVersion: 0.1.1
+  configChecksum: e3161a1c2022dff085ce01f6a35f0c95
   repoURL: https://github.com/chopinframework/orchestrator.git
   repoSubDirectory: chopin-typescript
   installationURL: https://gitpkg.now.sh/chopinframework/orchestrator/chopin-typescript
@@ -38,12 +38,12 @@ generatedFiles:
   - USAGE.md
   - docs/lib/utils/retryconfig.md
   - docs/models/components/security.md
-  - docs/models/operations/postapicontextjsonrequestbody.md
-  - docs/models/operations/postapicontextmultipartrequestbody.md
-  - docs/models/operations/postapirequestjsonheaders.md
-  - docs/models/operations/postapirequestjsonrequestbody.md
-  - docs/models/operations/postapirequestmultipartheaders.md
-  - docs/models/operations/postapirequestmultipartrequestbody.md
+  - docs/models/operations/postapiv1contextjsonrequestbody.md
+  - docs/models/operations/postapiv1contextmultipartrequestbody.md
+  - docs/models/operations/postapiv1requestjsonheaders.md
+  - docs/models/operations/postapiv1requestjsonrequestbody.md
+  - docs/models/operations/postapiv1requestmultipartheaders.md
+  - docs/models/operations/postapiv1requestmultipartrequestbody.md
   - docs/sdks/chopin/README.md
   - docs/sdks/oracle/README.md
   - docs/sdks/sequencer/README.md
@@ -51,12 +51,12 @@ generatedFiles:
   - jsr.json
   - package.json
   - src/core.ts
-  - src/funcs/oraclePostApiContextJson.ts
-  - src/funcs/oraclePostApiContextMultipart.ts
-  - src/funcs/oraclePostApiContextRaw.ts
-  - src/funcs/sequencerPostApiRequestJson.ts
-  - src/funcs/sequencerPostApiRequestMultipart.ts
-  - src/funcs/sequencerPostApiRequestRaw.ts
+  - src/funcs/oraclePostApiV1ContextJson.ts
+  - src/funcs/oraclePostApiV1ContextMultipart.ts
+  - src/funcs/oraclePostApiV1ContextRaw.ts
+  - src/funcs/sequencerPostApiV1RequestJson.ts
+  - src/funcs/sequencerPostApiV1RequestMultipart.ts
+  - src/funcs/sequencerPostApiV1RequestRaw.ts
   - src/hooks/hooks.ts
   - src/hooks/index.ts
   - src/hooks/types.ts
@@ -89,12 +89,12 @@ generatedFiles:
   - src/mcp-server/server.ts
   - src/mcp-server/shared.ts
   - src/mcp-server/tools.ts
-  - src/mcp-server/tools/oraclePostApiContextJson.ts
-  - src/mcp-server/tools/oraclePostApiContextMultipart.ts
-  - src/mcp-server/tools/oraclePostApiContextRaw.ts
-  - src/mcp-server/tools/sequencerPostApiRequestJson.ts
-  - src/mcp-server/tools/sequencerPostApiRequestMultipart.ts
-  - src/mcp-server/tools/sequencerPostApiRequestRaw.ts
+  - src/mcp-server/tools/oraclePostApiV1ContextJson.ts
+  - src/mcp-server/tools/oraclePostApiV1ContextMultipart.ts
+  - src/mcp-server/tools/oraclePostApiV1ContextRaw.ts
+  - src/mcp-server/tools/sequencerPostApiV1RequestJson.ts
+  - src/mcp-server/tools/sequencerPostApiV1RequestMultipart.ts
+  - src/mcp-server/tools/sequencerPostApiV1RequestRaw.ts
   - src/models/components/index.ts
   - src/models/components/security.ts
   - src/models/errors/apierror.ts
@@ -102,10 +102,10 @@ generatedFiles:
   - src/models/errors/index.ts
   - src/models/errors/sdkvalidationerror.ts
   - src/models/operations/index.ts
-  - src/models/operations/postapicontextjson.ts
-  - src/models/operations/postapicontextmultipart.ts
-  - src/models/operations/postapirequestjson.ts
-  - src/models/operations/postapirequestmultipart.ts
+  - src/models/operations/postapiv1contextjson.ts
+  - src/models/operations/postapiv1contextmultipart.ts
+  - src/models/operations/postapiv1requestjson.ts
+  - src/models/operations/postapiv1requestmultipart.ts
   - src/sdk/index.ts
   - src/sdk/oracle.ts
   - src/sdk/sdk.ts
@@ -169,6 +169,26 @@ examples:
       requestBody:
         multipart/form-data: {"url": "https://unwelcome-hubris.org/", "method": "<value>", "headers": {}, "body": "<value>"}
     speakeasy-default-post-api-request-raw:
+      requestBody:
+        text/plain: "x-file: example.file"
+  postApiV1Context:
+    speakeasy-default-post-api-v1-context-json:
+      requestBody:
+        application/json: {"requestNonce": "<value>", "value": "<value>"}
+    speakeasy-default-post-api-v1-context-multipart:
+      requestBody:
+        multipart/form-data: {"requestNonce": "<value>", "value": "<value>"}
+    speakeasy-default-post-api-v1-context-raw:
+      requestBody:
+        text/plain: "x-file: example.file"
+  postApiV1Request:
+    speakeasy-default-post-api-v1-request-json:
+      requestBody:
+        application/json: {"url": "https://possible-seagull.com", "method": "<value>", "headers": {}, "body": "<value>"}
+    speakeasy-default-post-api-v1-request-multipart:
+      requestBody:
+        multipart/form-data: {"url": "https://basic-declaration.com/", "method": "<value>", "headers": {}, "body": "<value>"}
+    speakeasy-default-post-api-v1-request-raw:
       requestBody:
         text/plain: "x-file: example.file"
 examplesVersion: 1.0.0

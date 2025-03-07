@@ -20,7 +20,7 @@ specific category of applications.
 
 ```typescript
 import { ChopinCore } from "@chopinframework/sdk/core.js";
-import { oraclePostApiContextJson } from "@chopinframework/sdk/funcs/oraclePostApiContextJson.js";
+import { oraclePostApiV1ContextJson } from "@chopinframework/sdk/funcs/oraclePostApiV1ContextJson.js";
 import { SDKValidationError } from "@chopinframework/sdk/models/errors/sdkvalidationerror.js";
 
 // Use `ChopinCore` for best tree-shaking performance.
@@ -31,7 +31,7 @@ const chopin = new ChopinCore({
 });
 
 async function run() {
-  const res = await oraclePostApiContextJson(chopin, {
+  const res = await oraclePostApiV1ContextJson(chopin, {
     requestNonce: "<value>",
     value: "<value>",
   });

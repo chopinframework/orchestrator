@@ -1,11 +1,11 @@
-# PostApiContextJsonRequestBody
+# PostApiV1ContextJsonRequestBody
 
 ## Example Usage
 
 ```typescript
-import { PostApiContextJsonRequestBody } from "@chopinframework/sdk/models/operations";
+import { PostApiV1ContextJsonRequestBody } from "@chopinframework/sdk/models/operations";
 
-let value: PostApiContextJsonRequestBody = {
+let value: PostApiV1ContextJsonRequestBody = {
   requestNonce: "<value>",
   value: "<value>",
 };
