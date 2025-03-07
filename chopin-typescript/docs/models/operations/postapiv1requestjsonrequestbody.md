@@ -8,16 +8,18 @@ import { PostApiV1RequestJsonRequestBody } from "@chopinframework/sdk/models/ope
 let value: PostApiV1RequestJsonRequestBody = {
   url: "https://second-newsletter.name",
   method: "<value>",
-  headers: {},
+  headers: {
+    "key": "<value>",
+  },
   body: "<value>",
 };
 ```
 
 ## Fields
 
-| Field                                                                                            | Type                                                                                             | Required                                                                                         | Description                                                                                      |
-| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `url`                                                                                            | *string*                                                                                         | :heavy_check_mark:                                                                               | Complete URL of the request                                                                      |
-| `method`                                                                                         | *string*                                                                                         | :heavy_check_mark:                                                                               | HTTP method (GET, POST, PUT, etc.)                                                               |
-| `headers`                                                                                        | [operations.PostApiV1RequestJsonHeaders](../../models/operations/postapiv1requestjsonheaders.md) | :heavy_check_mark:                                                                               | HTTP headers                                                                                     |
-| `body`                                                                                           | *string*                                                                                         | :heavy_check_mark:                                                                               | The request body content                                                                         |
+| Field                              | Type                               | Required                           | Description                        |
+| ---------------------------------- | ---------------------------------- | ---------------------------------- | ---------------------------------- |
+| `url`                              | *string*                           | :heavy_check_mark:                 | Complete URL of the request        |
+| `method`                           | *string*                           | :heavy_check_mark:                 | HTTP method (GET, POST, PUT, etc.) |
+| `headers`                          | Record<string, *string*>           | :heavy_check_mark:                 | HTTP headers                       |
+| `body`                             | *string*                           | :heavy_check_mark:                 | The request body content           |
