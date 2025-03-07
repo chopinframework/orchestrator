@@ -111,8 +111,9 @@
                   },
                   "headers": {
                     "description": "HTTP headers",
+                    "additionalProperties": { "type": "string" },
                     "type": "object",
-                    "patternProperties": { "^(.*)$": { "type": "string" } }
+                    "properties": {}
                   },
                   "body": {
                     "description": "The request body content",
@@ -136,8 +137,9 @@
                   },
                   "headers": {
                     "description": "HTTP headers",
+                    "additionalProperties": { "type": "string" },
                     "type": "object",
-                    "patternProperties": { "^(.*)$": { "type": "string" } }
+                    "properties": {}
                   },
                   "body": {
                     "description": "The request body content",
@@ -161,8 +163,9 @@
                   },
                   "headers": {
                     "description": "HTTP headers",
+                    "additionalProperties": { "type": "string" },
                     "type": "object",
-                    "patternProperties": { "^(.*)$": { "type": "string" } }
+                    "properties": {}
                   },
                   "body": {
                     "description": "The request body content",
