@@ -1,18 +1,19 @@
 lockVersion: 2.0.0
 id: 7ec8f99c-f28d-478d-b407-d8a43f54c8e0
 management:
-  docChecksum: b02ca63ea1f77b990c6623972cf88d24
+  docChecksum: 9d1b198ba9534cd3d83fa79b168df7d1
   docVersion: 1.0.0
   speakeasyVersion: 1.513.2
   generationVersion: 2.545.2
-  releaseVersion: 0.1.2
-  configChecksum: bb797bab1c96ac8a72fdb153a20d533a
+  releaseVersion: 0.2.0
+  configChecksum: 5659cb0d6d91d4040b474730b96f6f10
   repoURL: https://github.com/chopinframework/orchestrator.git
   repoSubDirectory: chopin-typescript
   installationURL: https://gitpkg.now.sh/chopinframework/orchestrator/chopin-typescript
   published: true
 features:
   typescript:
+    acceptHeaders: 2.81.2
     additionalDependencies: 0.1.0
     core: 3.21.3
     defaultEnabledRetries: 0.1.0
@@ -41,7 +42,10 @@ generatedFiles:
   - docs/models/operations/postapiv1contextjsonrequestbody.md
   - docs/models/operations/postapiv1contextmultipartrequestbody.md
   - docs/models/operations/postapiv1requestjsonrequestbody.md
+  - docs/models/operations/postapiv1requestjsonresponse.md
   - docs/models/operations/postapiv1requestmultipartrequestbody.md
+  - docs/models/operations/postapiv1requestmultipartresponse.md
+  - docs/models/operations/postapiv1requestrawresponse.md
   - docs/sdks/chopin/README.md
   - docs/sdks/oracle/README.md
   - docs/sdks/sequencer/README.md
@@ -104,6 +108,7 @@ generatedFiles:
   - src/models/operations/postapiv1contextmultipart.ts
   - src/models/operations/postapiv1requestjson.ts
   - src/models/operations/postapiv1requestmultipart.ts
+  - src/models/operations/postapiv1requestraw.ts
   - src/sdk/index.ts
   - src/sdk/oracle.ts
   - src/sdk/sdk.ts
@@ -183,11 +188,38 @@ examples:
     speakeasy-default-post-api-v1-request-json:
       requestBody:
         application/json: {"url": "https://possible-seagull.com", "method": "<value>", "headers": {}, "body": "<value>"}
+      responses:
+        "200":
+          application/json: "<value>"
+          multipart/form-data: "0xddB3EC5b88"
+          text/plain: "<value>"
+        '*':
+          multipart/form-data: "0xF3F3aCA6Cd"
+          application/json: "<value>"
+          text/plain: "<value>"
     speakeasy-default-post-api-v1-request-multipart:
       requestBody:
         multipart/form-data: {"url": "https://basic-declaration.com/", "method": "<value>", "headers": {}, "body": "<value>"}
+      responses:
+        "200":
+          application/json: "<value>"
+          multipart/form-data: "0x1141AFae5c"
+          text/plain: "<value>"
+        '*':
+          multipart/form-data: "0xE7aF034c14"
+          application/json: "<value>"
+          text/plain: "<value>"
     speakeasy-default-post-api-v1-request-raw:
       requestBody:
         text/plain: "x-file: example.file"
+      responses:
+        "200":
+          application/json: "<value>"
+          multipart/form-data: "0x233E5fC9a8"
+          text/plain: "<value>"
+        '*':
+          multipart/form-data: "0xCEbC1Ea76F"
+          application/json: "<value>"
+          text/plain: "<value>"
 examplesVersion: 1.0.0
 generatedTests: {}

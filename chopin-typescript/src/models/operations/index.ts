@@ -6,3 +6,4 @@ export * from "./postapiv1contextjson.js";
 export * from "./postapiv1contextmultipart.js";
 export * from "./postapiv1requestjson.js";
 export * from "./postapiv1requestmultipart.js";
+export * from "./postapiv1requestraw.js";

@@ -30,6 +30,8 @@ Process an HTTP request through the sequencer`,
       };
     }
 
-    return formatResult(void 0, apiCall);
+    const value = result.value;
+
+    return formatResult(value, apiCall);
   },
 };
